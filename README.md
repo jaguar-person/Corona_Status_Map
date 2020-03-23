@@ -10,6 +10,8 @@ This application was build using the following tools:
 - [DECK.GL](https://deck.gl/#/e)
 - [React](https://github.com/facebook/react)
 - [D3-scale](https://github.com/d3/d3-scale)
+- [Coronavirus-tracker-api](https://github.com/ExpDev07/coronavirus-tracker-api)
+
 ## Available Scripts
 
 In the project directory, you can run:
