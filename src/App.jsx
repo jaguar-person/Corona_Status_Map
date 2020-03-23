@@ -1,9 +1,8 @@
 import React from "react";
-import DeckGL, { GridCellLayer, ScatterplotLayer } from "deck.gl";
+import DeckGL, { ColumnLayer } from "deck.gl";
 import { StaticMap } from "react-map-gl";
-import { color, getColorArray } from "./settings/util";
 import { scaleLinear } from "d3-scale";
-import { easeBackOut, easeCubicInOut, pairs, shuffle } from 'd3';
+import { easeBackOut } from 'd3';
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 import axios from "axios";
 
@@ -59,8 +58,7 @@ export default class App extends React.Component {
   }
 
   renderTooltip() {
-    let { hoveredObject, pointerX, pointerY } = this.state || {};
-
+    let { hoveredObject, pointerX, pointerY, dataType } = this.state || {};
     return (
       hoveredObject && (
         <div
@@ -73,18 +71,31 @@ export default class App extends React.Component {
             top: pointerY
           }}>
           <ul className="hoveredObjectData">
-            <li>
-              <span>{hoveredObject.province}</span>
-            </li>
+            {hoveredObject.country !== hoveredObject.province && (
+              <li>
+                <span>{hoveredObject.province}</span>
+              </li>
+            )}
             <li><span>{hoveredObject.country}</span></li>
-            <li  style={{color: "red"}}> total deaths: {hoveredObject.deaths}</li>
-            <li  style={{color: "green"}}> total recovered: {hoveredObject.recovered}</li>
-            <li  style={{color: "orange"}}> total infections: {hoveredObject.confirmed}</li>
+            {dataType === "recovered" && (
+              <li style={{ color: "green" }}> total recovered(confirmed): {hoveredObject.recovered}</li>
+            )}
+            {dataType === "confirmed" && (
+              <li style={{ color: "orange" }}> total infections(confirmed): {hoveredObject.confirmed}</li>
+            )}
+            {dataType === "deaths" && (
+              <li style={{ color: "red" }}> total  deaths(confirmed): {hoveredObject.deaths}</li>
+            )}
           </ul>
         </div>
       )
     );
   }
+
+
+
+
+
 
   render() {
     data = this.state.data;
@@ -102,13 +113,14 @@ export default class App extends React.Component {
     });
 
     const dataNoZero = collectionCases.filter(cases => (cases.recovered > 0 || cases.deaths > 0 || cases.confirmed > 0));
-    const cellSize = 50000;
     const elevation = scaleLinear([0, 10], [0, 40]);
-    const elevationDeaths = scaleLinear([0, 10], [0, 20]);
+    const elevation2 = scaleLinear([0, 10], [0, 50]);
+    const radiusColumns = 10000;
     const layers = [
-      new GridCellLayer({
-        id: "grid-cell-layer",
+      new ColumnLayer({
+        id: "column-layer",
         data: dataNoZero,
+        dataTransform: d => d.locations.filter(f => f.deaths >= 0),
         ...this.props,
         pickable: true,
         extruded: true,
@@ -120,19 +132,50 @@ export default class App extends React.Component {
           },
         },
         getPosition: d => d.coordinates,
-        cellSize: cellSize,
+        diskResolution: 100,
+        radius: radiusColumns,
+        offset: [1, 0],
         elevationScale: 50,
         getFillColor: d => [0, 129, d.recovered * 0, 255],
         getElevation: d => elevation(d.recovered),
         onHover: info =>
           this.setState({
             hoveredObject: info.object,
+            dataType: "recovered",
             pointerX: info.x,
             pointerY: info.y
           }),
       }),
-      new GridCellLayer({
-        id: "grid-cell-layer-2",
+      new ColumnLayer({
+        id: "column-layer-2",
+        data: dataNoZero,
+        ...this.props,
+        pickable: true,
+        extruded: true,
+        transitions: {
+          getElevation: {
+            duration: 2000,
+            easing: easeBackOut,
+            enter: value => [60]
+          },
+        },
+        getPosition: d => d.coordinates,
+        diskResolution: 100,
+        radius: radiusColumns,
+        offset: [5, 3],
+        elevationScale: 50,
+        getFillColor: d => [255, 0, d.deaths * 0, 255],
+        getElevation: d => elevation2(d.deaths),
+        onHover: info =>
+          this.setState({
+            hoveredObject: info.object,
+            dataType: "deaths",
+            pointerX: info.x,
+            pointerY: info.y
+          }),
+      }),
+      new ColumnLayer({
+        id: "column-layer-3",
         data: dataNoZero,
         ...this.props,
         pickable: true,
@@ -145,13 +188,16 @@ export default class App extends React.Component {
           },
         },
         getPosition: d => d.coordinates,
-        cellSize: cellSize,
+        diskResolution: 100,
+        radius: radiusColumns,
+        offset: [3, 1],
         elevationScale: 50,
-        getFillColor: d => [255, 0, d.deaths * 0, 255],
-        getElevation: d => elevationDeaths(d.deaths),
+        getFillColor: d => [255, 165, d.confirmed * 0, 255],
+        getElevation: d => elevation(d.confirmed),
         onHover: info =>
           this.setState({
             hoveredObject: info.object,
+            dataType: "confirmed",
             pointerX: info.x,
             pointerY: info.y
           }),
