@@ -216,7 +216,7 @@ export default class App extends React.Component {
             <p>Legend COVID-19</p>
             <ul>
               <li style={{ color: "green" }}>Recovered</li>
-              <li style={{ color: "orange" }}>infections</li>
+              <li style={{ color: "orange" }}>Infection</li>
               <li style={{ color: "red" }}>Deaths</li>
             </ul>
           </div>
