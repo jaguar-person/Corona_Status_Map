@@ -3,6 +3,7 @@ import DeckGL, { ColumnLayer } from "deck.gl";
 import { StaticMap } from "react-map-gl";
 import { scaleLinear } from "d3-scale";
 import { easeBackOut } from 'd3';
+import CoronaInfo from "./dataRange/CoronaInfo";
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 import axios from "axios";
 
@@ -210,6 +211,16 @@ export default class App extends React.Component {
           <StaticMap mapStyle={mapStyle} mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
           {this.renderTooltip.bind(this)}
         </DeckGL>
+        <CoronaInfo>
+          <div className="legendData">
+            <p>Legend COVID-19</p>
+            <ul>
+              <li style={{ color: "green" }}>Recovered</li>
+              <li style={{ color: "orange" }}>infections</li>
+              <li style={{ color: "red" }}>Deaths</li>
+            </ul>
+          </div>
+        </CoronaInfo>
       </div>
     );
   }
