@@ -3,7 +3,9 @@ import DeckGL, { ColumnLayer } from "deck.gl";
 import { StaticMap } from "react-map-gl";
 import { scaleLinear } from "d3-scale";
 import { easeBackOut } from 'd3';
+import { color, getColorArray } from "./settings/util";
 import CoronaInfo from "./dataRange/CoronaInfo";
+import CoronaRange from "./dataRange/CoronaRange"
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 import axios from "axios";
 
@@ -34,29 +36,21 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-
     document.title = "Corona spread viz";
-    axios
-      .get(
-        `https://coronavirus-tracker-api.herokuapp.com/v2/locations`
-      )
-      .then(response => {
-        if (response.status === 200 && response != null) {
-          this.setState({
-            data: response.data.locations,
-          });
 
-
-
-        } else {
-          throw new Error("no data available");
-        }
+    axios.all([
+      axios.get('https://coronavirus-tracker-api.herokuapp.com/v2/locations?source=csbs'),
+      axios.get('https://coronavirus-tracker-api.herokuapp.com/v2/locations?source=jhu')])
+      .then(axios.spread((USAs, World) => {
+        let WorldData = World.data.locations || [];
+        let USData = USAs.data.locations || [];
+        data = WorldData.concat(USData)
+        this.setState({ data: data });
+      })).catch((error) => {
+        console.log(error); return [];
       })
-      .catch(function (error) {
-        console.log(error);
-        return [];
-      });
   }
+
 
   renderTooltip() {
     let { hoveredObject, pointerX, pointerY, dataType } = this.state || {};
@@ -65,22 +59,23 @@ export default class App extends React.Component {
         <div
           className="data-hover"
           style={{
-            position: "absolute",
+            position: "fixed",
             zIndex: 1000,
             pointerEvents: "none",
             left: pointerX,
-            top: pointerY
+            top: pointerY - 70,
           }}>
           <ul className="hoveredObjectData">
-            {hoveredObject.country !== hoveredObject.province && (
+
+            <li><span>{hoveredObject.county}</span></li>
+
+            {hoveredObject.county !== hoveredObject.province && (
               <li>
                 <span>{hoveredObject.province}</span>
               </li>
             )}
             <li><span>{hoveredObject.country}</span></li>
-            {dataType === "recovered" && (
-              <li style={{ color: "green" }}> total recovered(confirmed): {hoveredObject.recovered}</li>
-            )}
+
             {dataType === "confirmed" && (
               <li style={{ color: "orange" }}> total infections(confirmed): {hoveredObject.confirmed}</li>
             )}
@@ -93,15 +88,10 @@ export default class App extends React.Component {
     );
   }
 
-
-
-
-
-
   render() {
     data = this.state.data;
     let collectionCases = [];
-
+    console.log(data);
     collectionCases = data.map(function (location) {
       return {
         recovered: location.latest.recovered,
@@ -109,49 +99,22 @@ export default class App extends React.Component {
         confirmed: location.latest.confirmed,
         province: location.province,
         country: location.country,
+        county: location.county,
         coordinates: [parseFloat(location.coordinates.longitude), parseFloat(location.coordinates.latitude)]
       };
     });
 
     const dataNoZero = collectionCases.filter(cases => (cases.recovered > 0 || cases.deaths > 0 || cases.confirmed > 0));
-    const elevation = scaleLinear([0, 10], [0, 40]);
-    const elevation2 = scaleLinear([0, 10], [0, 50]);
-    const radiusColumns = 10000;
+    const elevation = scaleLinear([0, 10], [0, 10]);
+
+    const radiusColumns = 15000;
     const layers = [
-      new ColumnLayer({
-        id: "column-layer",
-        data: dataNoZero,
-        dataTransform: d => d.locations.filter(f => f.deaths >= 0),
-        ...this.props,
-        pickable: true,
-        extruded: true,
-        transitions: {
-          getElevation: {
-            duration: 2000,
-            easing: easeBackOut,
-            enter: value => [10]
-          },
-        },
-        getPosition: d => d.coordinates,
-        diskResolution: 100,
-        radius: radiusColumns,
-        offset: [1, 0],
-        elevationScale: 50,
-        getFillColor: d => [0, 129, d.recovered * 0, 255],
-        getElevation: d => elevation(d.recovered),
-        onHover: info =>
-          this.setState({
-            hoveredObject: info.object,
-            dataType: "recovered",
-            pointerX: info.x,
-            pointerY: info.y
-          }),
-      }),
       new ColumnLayer({
         id: "column-layer-2",
         data: dataNoZero,
         ...this.props,
         pickable: true,
+        material: true,
         extruded: true,
         transitions: {
           getElevation: {
@@ -161,12 +124,12 @@ export default class App extends React.Component {
           },
         },
         getPosition: d => d.coordinates,
-        diskResolution: 100,
+        diskResolution: 4,
         radius: radiusColumns,
         offset: [5, 3],
         elevationScale: 50,
-        getFillColor: d => [255, 0, d.deaths * 0, 255],
-        getElevation: d => elevation2(d.deaths),
+        getFillColor: d => getColorArray(color(d.deaths, [0, 55])),
+        getElevation: d => elevation(d.deaths),
         onHover: info =>
           this.setState({
             hoveredObject: info.object,
@@ -193,7 +156,7 @@ export default class App extends React.Component {
         radius: radiusColumns,
         offset: [3, 1],
         elevationScale: 50,
-        getFillColor: d => [255, 165, d.confirmed * 0, 255],
+        getFillColor: d => getColorArray(color(d.confirmed, [0, 55])),
         getElevation: d => elevation(d.confirmed),
         onHover: info =>
           this.setState({
@@ -214,10 +177,10 @@ export default class App extends React.Component {
         <CoronaInfo>
           <div className="legendData">
             <p>Legend COVID-19</p>
+            <CoronaRange />
             <ul>
-              <li style={{ color: "green" }}>Recovered</li>
-              <li style={{ color: "orange" }}>Infection</li>
-              <li style={{ color: "red" }}>Deaths</li>
+              <li>Infections</li>
+              <li>Deaths</li>
             </ul>
           </div>
         </CoronaInfo>

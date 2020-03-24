@@ -9,8 +9,8 @@ class CoronaInfo extends React.Component {
 
   render() {
     return (
-      <div className="info-airQuality">
-        <div className="content-airQuality">{this.props.children}</div>
+      <div className="info-Corona">
+        <div className="content-panel">{this.props.children}</div>
           
       </div>
     );

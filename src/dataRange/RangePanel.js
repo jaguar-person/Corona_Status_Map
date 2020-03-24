@@ -10,7 +10,7 @@ class RangePanel extends React.Component {
   render() {
     return (
       <div className="info-rangePanel">
-        <div className="content-airQuality">{this.props.children}</div>
+        <div className="content-panel">{this.props.children}</div>
       </div>
     );
   }
