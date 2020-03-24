@@ -19,17 +19,27 @@ body {
       li {
         &:nth-child(1) {
           &:before {
-            content: "●";
+            content: "▲";
+            display: inline-block;
+            width: 34px;
+            color:#a50f15;
+            font-size: 2em;
+            margin-left: -1.4em;
+          }
+        }
+        &:nth-child(3) {
+          &:before {
+            content: "■";
             display: inline-block;
             width: 25px;
             color:#a50f15;
-            font-size: 2em;
-            margin-left: -1.2em;
+            font-size: 1.7em;
+            margin-left: -1.4em;
           }
         }
         &:nth-child(2) {
           &:before {
-            content: "■";
+            content: "●";
             display: inline-block;
             width: 25px;
             color:#a50f15;

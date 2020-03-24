@@ -37,14 +37,11 @@ export default class App extends React.Component {
 
   componentDidMount() {
     document.title = "Corona spread viz";
-
     axios.all([
-      axios.get('https://coronavirus-tracker-api.herokuapp.com/v2/locations?source=csbs'),
-      axios.get('https://coronavirus-tracker-api.herokuapp.com/v2/locations?source=jhu')])
-      .then(axios.spread((USAs, World) => {
-        let WorldData = World.data.locations || [];
-        let USData = USAs.data.locations || [];
-        data = WorldData.concat(USData)
+      axios.get('https://corona.lmao.ninja/jhucsse')])
+      .then(axios.spread((World) => {
+        let WorldData = World.data || [];
+        data = WorldData
         this.setState({ data: data });
       })).catch((error) => {
         console.log(error); return [];
@@ -67,9 +64,9 @@ export default class App extends React.Component {
           }}>
           <ul className="hoveredObjectData">
 
-            <li><span>{hoveredObject.county}</span></li>
+            <li><span>{hoveredObject.city}</span></li>
 
-            {hoveredObject.county !== hoveredObject.province && (
+            {hoveredObject.city !== hoveredObject.province && (
               <li>
                 <span>{hoveredObject.province}</span>
               </li>
@@ -81,6 +78,9 @@ export default class App extends React.Component {
             )}
             {dataType === "deaths" && (
               <li style={{ color: "red" }}> total  deaths(confirmed): {hoveredObject.deaths}</li>
+            )}
+            {dataType === "recovered" && (
+              <li style={{ color: "green" }}> total  recovered(confirmed): {hoveredObject.recovered}</li>
             )}
           </ul>
         </div>
@@ -94,12 +94,12 @@ export default class App extends React.Component {
     console.log(data);
     collectionCases = data.map(function (location) {
       return {
-        recovered: location.latest.recovered,
-        deaths: location.latest.deaths,
-        confirmed: location.latest.confirmed,
+        recovered: location.stats.recovered,
+        deaths: location.stats.deaths,
+        confirmed: location.stats.confirmed,
         province: location.province,
         country: location.country,
-        county: location.county,
+        city: location.city,
         coordinates: [parseFloat(location.coordinates.longitude), parseFloat(location.coordinates.latitude)]
       };
     });
@@ -110,7 +110,7 @@ export default class App extends React.Component {
     const radiusColumns = 15000;
     const layers = [
       new ColumnLayer({
-        id: "column-layer-2",
+        id: "column-layer-1",
         data: dataNoZero,
         ...this.props,
         pickable: true,
@@ -139,6 +139,27 @@ export default class App extends React.Component {
           }),
       }),
       new ColumnLayer({
+        id: "column-layer-2",
+        data: dataNoZero,
+        ...this.props,
+        pickable: true,
+        extruded: true,
+        getPosition: d => d.coordinates,
+        diskResolution: 3,
+        radius: radiusColumns,
+        offset: [1, 0],
+        elevationScale: 50,
+        getFillColor: d => getColorArray(color(d.recovered, [0, 55])),
+        getElevation: d => elevation(d.recovered),
+        onHover: info =>
+          this.setState({
+            hoveredObject: info.object,
+            dataType: "recovered",
+            pointerX: info.x,
+            pointerY: info.y
+          }),
+      }),
+      new ColumnLayer({
         id: "column-layer-3",
         data: dataNoZero,
         ...this.props,
@@ -152,7 +173,7 @@ export default class App extends React.Component {
           },
         },
         getPosition: d => d.coordinates,
-        diskResolution: 100,
+        diskResolution: 10,
         radius: radiusColumns,
         offset: [3, 1],
         elevationScale: 50,
@@ -179,6 +200,7 @@ export default class App extends React.Component {
             <p>Legend COVID-19</p>
             <CoronaRange />
             <ul>
+              <li>Recovered</li>
               <li>Infections</li>
               <li>Deaths</li>
             </ul>
