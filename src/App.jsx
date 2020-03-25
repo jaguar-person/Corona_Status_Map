@@ -7,7 +7,9 @@ import { color, getColorArray } from "./settings/util";
 import CoronaInfo from "./dataRange/CoronaInfo";
 import CoronaRange from "./dataRange/CoronaRange"
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
+import EasyGeocoder from 'easy-geocoder';
 import axios from "axios";
+import { colorScale } from "./settings/colors";
 
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21xZnE0cjZhbHI0In0.aCGjvePsRwkvQyNBjUEkaw";
 const mapStyle = "mapbox://styles/ugur222/ck74tfdlm22dm1in0t5zxxvgq";
@@ -20,6 +22,10 @@ const INITIAL_VIEW_STATE = {
   pitch: 60,
   bearing: 5
 };
+
+const Geocoder = new EasyGeocoder({
+  useragent: "sa3rf344f"
+});
 
 let data
 export default class App extends React.Component {
@@ -35,10 +41,13 @@ export default class App extends React.Component {
 
   }
 
+
+
   componentDidMount() {
     document.title = "Corona spread viz";
+
     axios.all([
-      axios.get('https://corona.lmao.ninja/jhucsse')])
+      axios.get('https://corona.lmao.ninja/countries')])
       .then(axios.spread((World) => {
         let WorldData = World.data || [];
         data = WorldData
@@ -74,13 +83,20 @@ export default class App extends React.Component {
             <li><span>{hoveredObject.country}</span></li>
 
             {dataType === "confirmed" && (
-              <li style={{ color: "orange" }}> total infections(confirmed): {hoveredObject.confirmed}</li>
+              <div className="confirmed">
+                <li style={{ color: "#993404" }}>total infections: {hoveredObject.confirmed}</li>
+                <li>Infections today: {hoveredObject.todayCases}</li>
+              </div>
+
             )}
             {dataType === "deaths" && (
-              <li style={{ color: "red" }}> total  deaths(confirmed): {hoveredObject.deaths}</li>
+              <div className="deaths">
+                <li style={{ color: "#a50f15" }}>total deaths: {hoveredObject.deaths}</li>
+                <li>deaths today: {hoveredObject.todayDeaths}</li>
+              </div>
             )}
             {dataType === "recovered" && (
-              <li style={{ color: "green" }}> total  recovered(confirmed): {hoveredObject.recovered}</li>
+              <li style={{ color: "#006d2c" }}>total recovered: {hoveredObject.recovered}</li>
             )}
           </ul>
         </div>
@@ -92,15 +108,19 @@ export default class App extends React.Component {
     data = this.state.data;
     let collectionCases = [];
     console.log(data);
+    Geocoder.search({ q: "Buckingham Place, London" }).then(result => {
+      // outputs "51.4990929 -0.1401781"
+      console.log(result[0].lat, result[0].lon);
+    });
     collectionCases = data.map(function (location) {
       return {
-        recovered: location.stats.recovered,
-        deaths: location.stats.deaths,
-        confirmed: location.stats.confirmed,
-        province: location.province,
+        recovered: location.recovered,
+        deaths: location.deaths,
+        todayDeaths: location.todayDeaths,
+        todayCases: location.todayCases,
+        confirmed: location.cases,
         country: location.country,
-        city: location.city,
-        coordinates: [parseFloat(location.coordinates.longitude), parseFloat(location.coordinates.latitude)]
+        coordinates: [location.countryInfo.long, location.countryInfo.lat]
       };
     });
 
@@ -124,11 +144,11 @@ export default class App extends React.Component {
           },
         },
         getPosition: d => d.coordinates,
-        diskResolution: 4,
+        diskResolution: 10,
         radius: radiusColumns,
         offset: [5, 3],
         elevationScale: 50,
-        getFillColor: d => getColorArray(color(d.deaths, [0, 55])),
+        getFillColor: d => getColorArray(color(d.deaths, [0, 55], colorScale[0])),
         getElevation: d => elevation(d.deaths),
         onHover: info =>
           this.setState({
@@ -145,11 +165,11 @@ export default class App extends React.Component {
         pickable: true,
         extruded: true,
         getPosition: d => d.coordinates,
-        diskResolution: 3,
+        diskResolution: 10,
         radius: radiusColumns,
         offset: [1, 0],
         elevationScale: 50,
-        getFillColor: d => getColorArray(color(d.recovered, [0, 55])),
+        getFillColor: d => getColorArray(color(d.recovered, [0, 55], colorScale[1])),
         getElevation: d => elevation(d.recovered),
         onHover: info =>
           this.setState({
@@ -177,7 +197,7 @@ export default class App extends React.Component {
         radius: radiusColumns,
         offset: [3, 1],
         elevationScale: 50,
-        getFillColor: d => getColorArray(color(d.confirmed, [0, 55])),
+        getFillColor: d => getColorArray(color(d.confirmed, [0, 55], colorScale[2])),
         getElevation: d => elevation(d.confirmed),
         onHover: info =>
           this.setState({
@@ -198,7 +218,6 @@ export default class App extends React.Component {
         <CoronaInfo>
           <div className="legendData">
             <p>Legend COVID-19</p>
-            <CoronaRange />
             <ul>
               <li>Recovered</li>
               <li>Infections</li>
