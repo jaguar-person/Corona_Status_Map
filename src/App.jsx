@@ -5,9 +5,7 @@ import { scaleLinear } from "d3-scale";
 import { easeBackOut } from 'd3';
 import { color, getColorArray } from "./settings/util";
 import CoronaInfo from "./dataRange/CoronaInfo";
-import CoronaRange from "./dataRange/CoronaRange"
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
-import EasyGeocoder from 'easy-geocoder';
 import axios from "axios";
 import { colorScale } from "./settings/colors";
 
@@ -23,9 +21,7 @@ const INITIAL_VIEW_STATE = {
   bearing: 5
 };
 
-const Geocoder = new EasyGeocoder({
-  useragent: "sa3rf344f"
-});
+
 
 let data
 export default class App extends React.Component {
@@ -108,10 +104,6 @@ export default class App extends React.Component {
     data = this.state.data;
     let collectionCases = [];
     console.log(data);
-    Geocoder.search({ q: "Buckingham Place, London" }).then(result => {
-      // outputs "51.4990929 -0.1401781"
-      console.log(result[0].lat, result[0].lon);
-    });
     collectionCases = data.map(function (location) {
       return {
         recovered: location.recovered,
