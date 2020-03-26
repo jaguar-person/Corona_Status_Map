@@ -21,7 +21,10 @@ const INITIAL_VIEW_STATE = {
   bearing: 5
 };
 
-let data
+let data, collectionCases
+const elevation = scaleLinear([0, 10], [0, 10]);
+const radiusColumns = 15000;
+
 export default class App extends React.Component {
   state = {};
 
@@ -30,6 +33,7 @@ export default class App extends React.Component {
 
     this.state = {
       data: [],
+      collectionCases: [],
       render: false
     };
 
@@ -37,7 +41,6 @@ export default class App extends React.Component {
 
   componentDidMount() {
     document.title = "Corona spread viz";
-
     axios.all([
       axios.get('https://coronavirus-tracker-api.herokuapp.com/v2/locations?source=csbs'),
       axios.get('https://coronavirus-tracker-api.herokuapp.com/v2/locations?source=jhu')])
@@ -45,10 +48,22 @@ export default class App extends React.Component {
         let WorldData = World.data.locations || [];
         let USData = USAs.data.locations || [];
         data = WorldData.concat(USData)
+        data = data.map(function (location) {
+          return {
+            recovered: location.latest.recovered,
+            deaths: location.latest.deaths,
+            confirmed: location.latest.confirmed,
+            province: location.province,
+            country: location.country,
+            county: location.county,
+            coordinates: [parseFloat(location.coordinates.longitude), parseFloat(location.coordinates.latitude)]
+          };
+        })
         this.setState({ data: data });
       })).catch((error) => {
         console.log(error); return [];
       })
+    this.setFilters();
   }
 
 
@@ -88,30 +103,15 @@ export default class App extends React.Component {
     );
   }
 
-  render() {
+  setFilters() {
     data = this.state.data;
-    let collectionCases = [];
-    console.log(data);
-    collectionCases = data.map(function (location) {
-      return {
-        recovered: location.latest.recovered,
-        deaths: location.latest.deaths,
-        confirmed: location.latest.confirmed,
-        province: location.province,
-        country: location.country,
-        county: location.county,
-        coordinates: [parseFloat(location.coordinates.longitude), parseFloat(location.coordinates.latitude)]
-      };
-    });
+  }
 
-    const dataNoZero = collectionCases.filter(cases => (cases.recovered > 0 || cases.deaths > 0 || cases.confirmed > 0));
-    const elevation = scaleLinear([0, 10], [0, 10]);
-
-    const radiusColumns = 15000;
+  render() {
     const layers = [
       new ColumnLayer({
         id: "column-layer-2",
-        data: dataNoZero,
+        data,
         ...this.props,
         pickable: true,
         material: true,
@@ -140,7 +140,7 @@ export default class App extends React.Component {
       }),
       new ColumnLayer({
         id: "column-layer-3",
-        data: dataNoZero,
+        data,
         ...this.props,
         pickable: true,
         extruded: true,
