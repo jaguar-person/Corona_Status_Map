@@ -22,7 +22,7 @@ body {
             content: "●";
             display: inline-block;
             width: 27px;
-            color:#006d2c;
+            color: #006d2c;
             font-size: 2em;
             margin-left: -1.2em;
           }
@@ -32,7 +32,7 @@ body {
             content: "●";
             display: inline-block;
             width: 25px;
-            color:#a50f15;
+            color: #a50f15;
             font-size: 1.7em;
             margin-left: -1.4em;
           }
@@ -42,7 +42,7 @@ body {
             content: "●";
             display: inline-block;
             width: 25px;
-            color:#993404;
+            color: #f39c12;
             font-size: 1.7em;
             margin-left: -1.4em;
           }
@@ -59,15 +59,56 @@ body {
   list-style-type: none;
   padding: 2px;
 }
-
 .info-panel {
-  background: #ffff;
-  border-radius: 10px;
-  margin: 10px;
-  bottom: 20px;
-  position: absolute;
-  width: 150px;
-  height: 150px;
+  position: absolute; /* Sit on top of the page content */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+  z-index: 102; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+
+  .content {
+    box-shadow: 0px 0px 5px 0px #000000;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    width: 60%;
+  }
+
+  .custom-tooltip {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 2px solid #c3c3c3;
+    border-radius: 10px;
+
+    span {
+      font-weight: bold;
+    }
+  }
+
+  .direction-pop-up h1 {
+    font-size: 34px;
+    text-align: center;
+  }
+
+  p {
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  button {
+    float: right;
+  }
+
+  button:hover {
+    cursor: pointer;
+  }
 }
 
 .info-Corona {

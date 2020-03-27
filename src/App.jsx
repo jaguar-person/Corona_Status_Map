@@ -1,7 +1,9 @@
 import React from "react";
-import DeckGL, { ColumnLayer } from "deck.gl";
+import DeckGL, { ColumnLayer, IconLayer } from "deck.gl";
 import { StaticMap } from "react-map-gl";
+import InfoPanel from "./InfoPanel";
 import { scaleLinear } from "d3-scale";
+import Detailgraph from "./detailview/Detailgraph";
 import { easeBackOut } from 'd3';
 import { color, getColorArray } from "./settings/util";
 import CoronaInfo from "./dataRange/CoronaInfo";
@@ -12,14 +14,17 @@ import { colorScale } from "./settings/colors";
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21xZnE0cjZhbHI0In0.aCGjvePsRwkvQyNBjUEkaw";
 const mapStyle = "mapbox://styles/ugur222/ck74tfdlm22dm1in0t5zxxvgq";
 const INITIAL_VIEW_STATE = {
-  longitude: 117.2264,
-  latitude: 31.8257,
-  zoom: 4,
+  longitude: 12.8333,
+  latitude: 42.8333,
+  zoom: 4.5,
   maxZoom: 16,
-  minZoom: 3,
+  minZoom: 4.5,
   pitch: 60,
   bearing: 5
 };
+
+
+let controlsOn = true;
 
 
 
@@ -35,9 +40,30 @@ export default class App extends React.Component {
       render: false
     };
 
+    this.closeInfoPanel = this.closeInfoPanel.bind(this);
+
   }
 
+  closeInfoPanel() {
+    controlsOn = true;
+    this.setState({
+      clickedObject: null,
+      dataType: null,
+      render: false
+    });
+  }
 
+  renderLocation() {
+    const { clickedObject, dataType } = this.state || {};
+    if (clickedObject != null) {
+      controlsOn = false;
+      return (
+        <InfoPanel closeInfoPanel={this.closeInfoPanel}>
+          <Detailgraph clickedObject={clickedObject} dataType={dataType} />
+        </InfoPanel>
+      );
+    }
+  }
 
   componentDidMount() {
     document.title = "Corona spread viz";
@@ -46,11 +72,26 @@ export default class App extends React.Component {
       axios.get('https://corona.lmao.ninja/countries')])
       .then(axios.spread((World) => {
         let WorldData = World.data || [];
-        data = WorldData
+        data = WorldData;
+        data = data.map(function (location) {
+          return {
+            recovered: location.recovered,
+            deaths: location.deaths,
+            critical: location.critical,
+            todayDeaths: location.todayDeaths,
+            todayCases: location.todayCases,
+            cases: location.cases,
+            flag: location.countryInfo.flag,
+            country: location.country,
+            coordinates: [location.countryInfo.long, location.countryInfo.lat]
+          };
+        });
+
         this.setState({ data: data });
       })).catch((error) => {
         console.log(error); return [];
       })
+    this.setFilters();
   }
 
 
@@ -78,15 +119,16 @@ export default class App extends React.Component {
             )}
             <li><span>{hoveredObject.country}</span></li>
 
-            {dataType === "confirmed" && (
-              <div className="confirmed">
-                <li style={{ color: "#993404" }}>total infections: {hoveredObject.confirmed}</li>
+            {dataType === "cases" && (
+              <div className="cases">
+                <li style={{ color: "#f39c12" }}>total infections: {hoveredObject.cases}</li>
                 <li>Infections today: {hoveredObject.todayCases}</li>
               </div>
 
             )}
             {dataType === "deaths" && (
               <div className="deaths">
+                <li style={{ color: "red" }}>In critical condition: {hoveredObject.critical}</li>
                 <li style={{ color: "#a50f15" }}>total deaths: {hoveredObject.deaths}</li>
                 <li>deaths today: {hoveredObject.todayDeaths}</li>
               </div>
@@ -100,32 +142,19 @@ export default class App extends React.Component {
     );
   }
 
-  render() {
+  setFilters() {
     data = this.state.data;
-    let collectionCases = [];
-    console.log(data);
-    collectionCases = data.map(function (location) {
-      return {
-        recovered: location.recovered,
-        deaths: location.deaths,
-        todayDeaths: location.todayDeaths,
-        todayCases: location.todayCases,
-        confirmed: location.cases,
-        country: location.country,
-        coordinates: [location.countryInfo.long, location.countryInfo.lat]
-      };
-    });
+  }
 
-    const dataNoZero = collectionCases.filter(cases => (cases.recovered > 0 || cases.deaths > 0 || cases.confirmed > 0));
-    const elevation = scaleLinear([0, 10], [0, 10]);
-
+  render() {
+    const elevation = scaleLinear([0, 10], [0, 3]);
     const radiusColumns = 15000;
     const layers = [
       new ColumnLayer({
         id: "column-layer-1",
-        data: dataNoZero,
+        data,
         ...this.props,
-        pickable: true,
+        pickable: controlsOn,
         material: true,
         extruded: true,
         transitions: {
@@ -149,12 +178,17 @@ export default class App extends React.Component {
             pointerX: info.x,
             pointerY: info.y
           }),
+        onClick: info =>
+          this.setState({
+            dataType: "deaths",
+            clickedObject: info.object
+          })
       }),
       new ColumnLayer({
         id: "column-layer-2",
-        data: dataNoZero,
+        data,
         ...this.props,
-        pickable: true,
+        pickable: controlsOn,
         extruded: true,
         getPosition: d => d.coordinates,
         diskResolution: 10,
@@ -170,12 +204,18 @@ export default class App extends React.Component {
             pointerX: info.x,
             pointerY: info.y
           }),
+        onClick: info =>
+          this.setState({
+            dataType: "recovered",
+            clickedObject: info.object
+          })
+
       }),
       new ColumnLayer({
         id: "column-layer-3",
-        data: dataNoZero,
+        data,
         ...this.props,
-        pickable: true,
+        pickable: controlsOn,
         extruded: true,
         transitions: {
           getElevation: {
@@ -189,23 +229,30 @@ export default class App extends React.Component {
         radius: radiusColumns,
         offset: [3, 1],
         elevationScale: 50,
-        getFillColor: d => getColorArray(color(d.confirmed, [0, 55], colorScale[2])),
-        getElevation: d => elevation(d.confirmed),
+        getFillColor: d => getColorArray(color(d.cases, [0, 55], colorScale[2])),
+        getElevation: d => elevation(d.cases),
         onHover: info =>
           this.setState({
             hoveredObject: info.object,
-            dataType: "confirmed",
+            dataType: "cases",
             pointerX: info.x,
             pointerY: info.y
           }),
+        onClick: info =>
+          this.setState({
+            dataType: "cases",
+            clickedObject: info.object
+          })
       }),
     ];
 
     return (
       <div>
-        <DeckGL layers={layers} initialViewState={INITIAL_VIEW_STATE} controller={true} >
+        <DeckGL layers={layers} initialViewState={INITIAL_VIEW_STATE} controller={controlsOn} >
           <StaticMap mapStyle={mapStyle} mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
+
           {this.renderTooltip.bind(this)}
+          {this.renderLocation.bind(this)}
         </DeckGL>
         <CoronaInfo>
           <div className="legendData">
