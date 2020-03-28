@@ -1,3 +1,9 @@
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
 body {
   margin: 0;
   padding: 0;
@@ -70,18 +76,25 @@ body {
   cursor: pointer; /* Add a pointer on hover */
 
   .content {
+    width: 900px;
+    height: 500px;
+
+    .panel-description {
+      width: 100%;
+      height: 400px;
+    }
+
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: #fff;
     padding: 20px;
-    width: 60%;
   }
 
-  svg.recharts-surface {
-    width: 950px;
-  }
+  // svg.recharts-surface {
+  //   width: 700px;
+  // }
 
   .custom-tooltip {
     padding: 10px;
@@ -119,6 +132,8 @@ body {
   margin: 10px;
   bottom: 20px;
   position: absolute;
+  width: 200px;
+  height: 200px;
 }
 
 .data-hover {
@@ -150,4 +165,26 @@ header h1 {
 span {
   font-weight: bold;
   margin-bottom: 40px;
+}
+
+@media only screen and (max-width: 1023px) {
+  .mapboxgl-ctrl-top-left {
+    width: 100%;
+  }
+  .explainPopup .info-panel {
+    display: none;
+  }
+
+  .info-panel {
+    .content {
+      width: 85%;
+    }
+  }
+
+  .mapboxgl-ctrl-top-left .mapboxgl-ctrl {
+    margin: 0 auto;
+    margin-top: 10px;
+    float: initial;
+    min-width: 95%;
+  }
 }

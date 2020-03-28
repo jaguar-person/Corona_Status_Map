@@ -66,7 +66,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    document.title = "Corona spread viz";
+    document.title = "COVID-19 Data-Viz";
 
     axios.all([
       axios.get('https://corona.lmao.ninja/countries')])
@@ -253,17 +253,17 @@ export default class App extends React.Component {
 
           {this.renderTooltip.bind(this)}
           {this.renderLocation.bind(this)}
+          <CoronaInfo>
+            <div className="legendData">
+              <p>Legend COVID-19</p>
+              <ul>
+                <li>Recovered</li>
+                <li>Infections</li>
+                <li>Deaths</li>
+              </ul>
+            </div>
+          </CoronaInfo>
         </DeckGL>
-        <CoronaInfo>
-          <div className="legendData">
-            <p>Legend COVID-19</p>
-            <ul>
-              <li>Recovered</li>
-              <li>Infections</li>
-              <li>Deaths</li>
-            </ul>
-          </div>
-        </CoronaInfo>
       </div>
     );
   }
