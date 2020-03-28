@@ -70,8 +70,6 @@ body {
   cursor: pointer; /* Add a pointer on hover */
 
   .content {
-    box-shadow: 0px 0px 5px 0px #000000;
-    border-radius: 10px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -79,6 +77,10 @@ body {
     background: #fff;
     padding: 20px;
     width: 60%;
+  }
+
+  svg.recharts-surface {
+    width: 950px;
   }
 
   .custom-tooltip {
@@ -129,52 +131,6 @@ body {
 
 header h1 {
   text-align: center;
-}
-
-.info-panel {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  z-index: 200;
-
-  .content {
-    box-shadow: 0px 0px 5px 0px #000000;
-    border-radius: 10px;
-  }
-
-  .custom-tooltip {
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.7);
-    border: 2px solid #c3c3c3;
-    border-radius: 10px;
-
-    span {
-      font-weight: bold;
-    }
-  }
-
-  p {
-    font-size: 15px;
-    font-weight: 400;
-  }
-
-  button {
-    float: right;
-  }
-
-  button:hover {
-    cursor: pointer;
-  }
-  .content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    padding: 20px;
-    width: 60%;
-  }
 }
 
 // LOADING

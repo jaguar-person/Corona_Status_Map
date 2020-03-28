@@ -110,25 +110,10 @@ export default class Detailgraph extends Component {
                 {this.state.data ? (
                     <div className="panel-description">
                         <h1 className="panel-header">{countryName}</h1>
-                        <LineChart width={900} height={400} data={data} margin={{
-                            top: 5,
-                            right: 30,
-                            left: 40,
-                            bottom: 5
-                        }}>
-                            <XAxis dataKey="Date" tickFormatter={this.xAxisTickFormatter} tickSize={4} dx={8} allowDataOverflow={true} />
-                            <YAxis type="number" orientation='left' tick={{ color: "red" }}
-                                label={
-                                    <Text
-                                        style={{ fontSize: '22px', fontWeight: 'bold', fill: color }}
-                                        x={0}
-                                        y={0}
-                                        dx={20}
-                                        dy={150}
-                                        offset={0}
-                                        angle={-90}
-                                    >Cases</Text>
-                                } />
+                        <LineChart width={900} height={400} data={data} margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
+                            <XAxis dataKey="Date" tickFormatter={this.xAxisTickFormatter} tickSize={4} dx={16} allowDataOverflow={true} />
+                            <YAxis type="number"  domain={[0, 'dataMax']} orientation='left' tick={{ color: "red" }}
+                                label={<Text style={{ fontSize: '22px', fontWeight: 'bold', fill: color }} x={0} y={0} dx={20} dy={150} offset={0} angle={-90}>Cases</Text>} />
                             <Tooltip content={this.CustomTooltip} animationDuration={0} />
                             <Line margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                                 dataKey="Cases" stroke={color} type="natural" dot={false} travellerWidth={4} strokeWidth={1}
@@ -144,7 +129,7 @@ export default class Detailgraph extends Component {
                 ) : (
                         <div className="loading">
                             <img src="asset/img/loader.gif" alt="Loading animation" />
-                    Loading...
+                             Loading...
                         </div>
                     )}
             </div>

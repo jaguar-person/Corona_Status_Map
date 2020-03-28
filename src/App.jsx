@@ -1,5 +1,5 @@
 import React from "react";
-import DeckGL, { ColumnLayer, IconLayer } from "deck.gl";
+import DeckGL, { ColumnLayer } from "deck.gl";
 import { StaticMap } from "react-map-gl";
 import InfoPanel from "./InfoPanel";
 import { scaleLinear } from "d3-scale";
