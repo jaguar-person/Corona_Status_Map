@@ -36,8 +36,6 @@ export default class Detailgraph extends Component {
             countryName: country
         });
 
-        dataType = (dataType === "cases" ? "confirmed" : dataType);
-
         color = (dataType === "confirmed" ? "#f39c12" : dataType === "deaths" ? "#a50f15" : "#006d2c");
         axios.all([
             axios.get(`https://api.covid19api.com/total/country/${country}/status/${dataType}`)])
@@ -59,7 +57,7 @@ export default class Detailgraph extends Component {
     CustomTooltip = ({ active, payload, label }) => {
         let dateTip = moment(label)
             .format("llll")
-            .slice(0, 10);
+            .slice(0, 12);
         let formattedDate = dateTip
         if (payload) {
             if (active) {

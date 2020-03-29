@@ -81,6 +81,7 @@ export default class App extends React.Component {
             todayDeaths: location.todayDeaths,
             todayCases: location.todayCases,
             cases: location.cases,
+            active: location.active,
             flag: location.countryInfo.flag,
             country: location.country,
             coordinates: [location.countryInfo.long, location.countryInfo.lat]
@@ -119,10 +120,11 @@ export default class App extends React.Component {
             )}
             <li><span>{hoveredObject.country}</span></li>
 
-            {dataType === "cases" && (
+            {dataType === "confirmed" && (
               <div className="cases">
-                <li style={{ color: "#f39c12" }}>total infections: {hoveredObject.cases}</li>
-                <li>Infections today: {hoveredObject.todayCases}</li>
+                <li style={{ color: "#f39c12" }}>total cases: {hoveredObject.cases}</li>
+                <li>active cases:  {hoveredObject.active}</li>
+                <li>cases today: {hoveredObject.todayCases}</li>
               </div>
 
             )}
@@ -234,13 +236,13 @@ export default class App extends React.Component {
         onHover: info =>
           this.setState({
             hoveredObject: info.object,
-            dataType: "cases",
+            dataType: "confirmed",
             pointerX: info.x,
             pointerY: info.y
           }),
         onClick: info =>
           this.setState({
-            dataType: "cases",
+            dataType: "confirmed",
             clickedObject: info.object
           })
       }),
