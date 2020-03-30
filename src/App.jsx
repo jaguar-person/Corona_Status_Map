@@ -110,32 +110,89 @@ export default class App extends React.Component {
           }}>
           <ul className="hoveredObjectData">
 
-            <li><span>{hoveredObject.city}</span></li>
+            <li><h5 class="title is-5">{hoveredObject.city}</h5></li>
 
             {hoveredObject.city !== hoveredObject.province && (
               <li>
-                <span>{hoveredObject.province}</span>
+                <span class="title is-4">{hoveredObject.province}</span>
               </li>
             )}
-            <li><span>{hoveredObject.country}</span></li>
+            <li><h5 class="title is-5">{hoveredObject.country}</h5></li>
 
             {dataType === "confirmed" && (
               <div className="cases">
-                <li style={{ color: "#f39c12" }}>total cases: {hoveredObject.cases}</li>
-                <li>active cases:  {hoveredObject.active}</li>
-                <li>cases today: {hoveredObject.todayCases}</li>
+                <li className="detail">
+                  <div className="img-detail">
+                    <img alt="total cases" src="https://img.icons8.com/color/48/000000/treatment-plan.png" />
+                  </div>
+                  <div className="info-detail">
+                    <span style={{ color: "#f39c12" }}>total cases</span>
+                    <strong>{hoveredObject.cases}</strong>
+                  </div>
+                </li>
+                <li className="detail">
+                  <div className="img-detail">
+                    <img alt="active cases:" src="https://img.icons8.com/color/48/000000/coronavirus.png" />
+                  </div>
+                  <div className="info-detail">
+                    <span style={{ color: "#f39c12" }}>active cases</span>
+                    <strong>{hoveredObject.active}</strong>
+                  </div>
+                </li>
+                <li className="detail">
+                  <div className="img-detail">
+                    <img alt="cases today:" src="https://img.icons8.com/color/48/000000/health-book.png" />
+                  </div>
+                  <div className="info-detail">
+                    <span style={{ color: "#f39c12" }}>cases today</span>
+                    <strong>{hoveredObject.todayCases}</strong>
+                  </div>
+                </li>
               </div>
-
             )}
             {dataType === "deaths" && (
-              <div className="deaths">
-                <li style={{ color: "red" }}>In critical condition: {hoveredObject.critical}</li>
-                <li style={{ color: "#a50f15" }}>total deaths: {hoveredObject.deaths}</li>
-                <li>deaths today: {hoveredObject.todayDeaths}</li>
+              <div className="cases">
+                <li className="detail">
+                  <div className="img-detail">
+                    <img alt="Total deaths" src="https://img.icons8.com/color/48/000000/cemetery.png" />
+                  </div>
+                  <div className="info-detail">
+                    <span style={{ color: "red" }}>total deaths</span>
+                    <strong>{hoveredObject.deaths}</strong>
+                  </div>
+                </li>
+                <li className="detail">
+                  <div className="img-detail">
+                    <img alt="In critical condition" src="https://img.icons8.com/color/48/000000/hospital-room--v2.png" />
+                  </div>
+                  <div className="info-detail">
+                    <span style={{ color: "red" }}>In critical condition</span>
+                    <strong>{hoveredObject.critical}</strong>
+                  </div>
+                </li>
+                <li className="detail">
+                  <div className="img-detail">
+                    <img alt="deaths today:" src="https://img.icons8.com/color/48/000000/death.png" />
+                  </div>
+                  <div className="info-detail">
+                    <span style={{ color: "red" }}>deaths today</span>
+                    <strong>{hoveredObject.todayDeaths}</strong>
+                  </div>
+                </li>
               </div>
             )}
             {dataType === "recovered" && (
-              <li style={{ color: "#006d2c" }}>total recovered: {hoveredObject.recovered}</li>
+              <div className="cases">
+                <li className="detail">
+                  <div className="img-detail">
+                    <img alt="Total recovered" src="https://img.icons8.com/color/48/000000/recovery.png" />
+                  </div>
+                  <div className="info-detail">
+                    <span style={{ color: "#006d2c" }}>total recovered</span>
+                    <strong >{hoveredObject.recovered}</strong>
+                  </div>
+                </li>
+              </div>
             )}
           </ul>
         </div>
