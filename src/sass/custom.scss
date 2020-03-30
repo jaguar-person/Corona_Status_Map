@@ -1,3 +1,6 @@
+@import "infopanel.scss";
+@import "legend.scss";
+
 html,
 body,
 #root {
@@ -14,161 +17,11 @@ body {
         float: right;
     }
 
-    .legendData {
-        padding: 10px;
-        li {
-            list-style-type: none;
-        }
-        p {
-            font-weight: bolder;
-        }
-
-        ul {
-            li {
-                &:nth-child(1) {
-                    &:before {
-                        content: "●";
-                        display: inline-block;
-                        width: 27px;
-                        color: #006d2c;
-                        font-size: 2em;
-                    }
-                }
-                &:nth-child(3) {
-                    &:before {
-                        content: "●";
-                        display: inline-block;
-                        width: 25px;
-                        color: #a50f15;
-                        font-size: 1.7em;
-                    }
-                }
-                &:nth-child(2) {
-                    &:before {
-                        content: "●";
-                        display: inline-block;
-                        width: 25px;
-                        color: #f39c12;
-                        font-size: 1.7em;
-                    }
-                }
-            }
-        }
+    span {
+        font-weight: bold;
+        margin-bottom: 40px;
     }
 }
-.hoveredObjectData li {
-    list-style-type: none;
-    padding: 2px;
-}
-.info-panel {
-    position: absolute; /* Sit on top of the page content */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
-    z-index: 102; /* Specify a stack order in case you're using a different order for other elements */
-    cursor: pointer; /* Add a pointer on hover */
-
-    .content {
-        width: 900px;
-        height: 500px;
-        border-radius: 10px;
-
-        .panel-description {
-            width: 100%;
-            height: 400px;
-        }
-
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #fff;
-        padding: 20px;
-    }
-
-    // svg.recharts-surface {
-    //   width: 700px;
-    // }
-
-    .custom-tooltip {
-        padding: 10px;
-        background-color: rgba(255, 255, 255, 0.7);
-        border: 2px solid #c3c3c3;
-        border-radius: 10px;
-
-        span {
-            font-weight: bold;
-        }
-    }
-
-    .direction-pop-up h1 {
-        font-size: 34px;
-        text-align: center;
-    }
-
-    p {
-        font-size: 15px;
-        font-weight: 400;
-    }
-
-    button {
-        background: transparent;
-        border: 0px;
-        float: right;
-        span {
-            font-size: 25px;
-            color: #000000;
-        }
-    }
-
-    button:hover {
-        cursor: pointer;
-    }
-}
-
-.info-Corona {
-    background: #ffff;
-    border-radius: 10px;
-    margin: 10px;
-    bottom: 20px;
-    position: absolute;
-    width: 200px;
-    height: 200px;
-}
-
-.data-hover {
-    padding: 4px;
-    background: #fff;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
-    white-space: nowrap;
-    border-radius: 10px;
-}
-
-header h1 {
-    text-align: center;
-}
-
-// LOADING
-.loading {
-    text-align: center;
-
-    img {
-        display: inline-block;
-        width: 2rem;
-        height: 2rem;
-        margin: 1rem;
-        vertical-align: middle;
-        border-radius: 100%;
-    }
-}
-
-span {
-    font-weight: bold;
-    margin-bottom: 40px;
-}
-
 @media only screen and (max-width: 1023px) {
     .mapboxgl-ctrl-top-left {
         width: 100%;

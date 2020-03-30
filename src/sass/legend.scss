@@ -1,0 +1,50 @@
+.info-Corona {
+    background: #ffff;
+    border-radius: 10px;
+    margin: 10px;
+    bottom: 20px;
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    .legendData {
+        padding: 10px;
+        li {
+            list-style-type: none;
+        }
+        p {
+            font-weight: bolder;
+        }
+
+        ul {
+            li {
+                &:nth-child(1) {
+                    &:before {
+                        content: "●";
+                        display: inline-block;
+                        width: 27px;
+                        color: #006d2c;
+                        font-size: 2em;
+                    }
+                }
+                &:nth-child(3) {
+                    &:before {
+                        content: "●";
+                        display: inline-block;
+                        width: 25px;
+                        color: #a50f15;
+                        font-size: 1.7em;
+                    }
+                }
+                &:nth-child(2) {
+                    &:before {
+                        content: "●";
+                        display: inline-block;
+                        width: 25px;
+                        color: #f39c12;
+                        font-size: 1.7em;
+                    }
+                }
+            }
+        }
+    }
+}
