@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { LineChart, Line, XAxis, YAxis, Tooltip, Brush, Text, ResponsiveContainer } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, Tooltip, Brush, Text, ResponsiveContainer } from "recharts";
 import axios from "axios";
 import moment from "moment";
 
@@ -29,8 +29,8 @@ export default class Detailgraph extends Component {
     componentDidMount() {
         let country = this.props.clickedObject.country;
         dataType = this.props.dataType;
-
-        country = (country === "S. Korea" ? "korea-south" : country === "UK" ? "united-kingdom" : country);
+        console.log(country);
+        country = (country === "S. Korea" ? "korea-south" : country === "UK" ? "united-kingdom" : country === "USA" ? "US" : country);
 
         this.setState({
             countryName: country
@@ -47,12 +47,9 @@ export default class Detailgraph extends Component {
             })).catch((error) => {
                 console.log(error); return [];
             })
-        this.setFilters();
     }
 
-    setFilters() {
-        data = this.state.data;
-    }
+
 
     CustomTooltip = ({ active, payload, label }) => {
         let dateTip = moment(label)
@@ -76,27 +73,35 @@ export default class Detailgraph extends Component {
 
     render() {
         countryName = this.state.countryName;
+        data = this.state.data;
         return (
             <div ref={e => (this.container = e)}>
                 {this.state.data ? (
                     <div className="panel-description">
-                        <h1 className="panel-header">{countryName}</h1>
+                        <h1 className="panel-header title is-2">{countryName}</h1>
                         <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={data} margin={{ top: 5, right: 70, left: 50, bottom: 5 }}>
-                                <XAxis dataKey="Date" padding={{ left: 5 }} tickFormatter={this.xAxisTickFormatter} tickSize={4} dx={8} allowDataOverflow={true} />
-                                <YAxis type="number" domain={[0, 10]} orientation='left' tick={{ color: "red" }}
+                            <AreaChart data={data} margin={{ top: 5, right: 70, left: 50, bottom: 5 }}>
+                                <defs>
+                                    <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor={color} stopOpacity={0.8} />
+                                        <stop offset="95%" stopColor={color} stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <XAxis dataKey="Date" tickFormatter={this.xAxisTickFormatter} tickCount={10} minTickGap={10} tickSize={4} dx={14} allowDataOverflow={true} />
+                                <YAxis type="number" domain={[0, 10]} padding={{ top: 2.5, bottom: 5 }} orientation='left'
                                     label={<Text style={{ fontSize: '22px', fontWeight: 'bold', fill: color }} x={0} y={0} dx={20} dy={150} offset={0} angle={-90}>Cases</Text>} />
                                 <Tooltip content={this.CustomTooltip} animationDuration={0} />
-                                <Line margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                                    dataKey="Cases" stroke={color} type="natural" dot={false} travellerWidth={4} strokeWidth={1}
-                                    activeDot={{ fill: "#000000", stroke: "#FFFFFF", strokeWidth: 1, r: 5 }} />
-                                <Brush dataKey="Date" tickFormatter={this.xAxisTickFormatter} height={40} stroke={color}>
-                                    <LineChart>
+                                <Area animationDuration={4000}
+                                    animationEasing={"ease-in-out"} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                                    dataKey="Cases" stroke={color} type="natural" dot={false} travellerWidth={4} strokeWidth={3}
+                                    activeDot={{ fill: "#000000", stroke: "#FFFFFF", strokeWidth: 1, r: 5 }} fill="url(#colorUv)" />
+                                <Brush dataKey="Date" tickFormatter={this.xAxisTickFormatter} height={40} startIndex={Math.round(data.length * 0.75)} stroke={color}>
+                                    <AreaChart >
                                         <YAxis tick={false} width={0} hide domain={["auto", "auto"]} />
-                                        <Line type="natural" dataKey="Cases" stroke={color} name="cases" dot={false} />
-                                    </LineChart>
+                                        <Area fill="url(#colorUv)" type="natural" dataKey="Cases" stroke={color} strokeWidth={2} name="cases" dot={false} />
+                                    </AreaChart>
                                 </Brush>
-                            </LineChart>
+                            </AreaChart>
                         </ResponsiveContainer>
                     </div>
                 ) : (

@@ -1,13 +1,12 @@
 import React from "react";
 import DeckGL, { ColumnLayer } from "deck.gl";
-import { StaticMap } from "react-map-gl";
+import { StaticMap, FullscreenControl } from "react-map-gl";
 import InfoPanel from "./InfoPanel";
 import { scaleLinear } from "d3-scale";
 import Detailgraph from "./detailview/Detailgraph";
 import { easeBackOut } from 'd3';
 import { color, getColorArray } from "./settings/util";
 import CoronaInfo from "./dataRange/CoronaInfo";
-import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 import axios from "axios";
 import { colorScale } from "./settings/colors";
 
@@ -149,7 +148,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const elevation = scaleLinear([0, 10], [0, 3]);
+    const elevation = scaleLinear([0, 100000], [0, 15000]);
     const radiusColumns = 15000;
     const layers = [
       new ColumnLayer({
@@ -252,9 +251,11 @@ export default class App extends React.Component {
       <div>
         <DeckGL layers={layers} initialViewState={INITIAL_VIEW_STATE} controller={controlsOn} >
           <StaticMap mapStyle={mapStyle} mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
-
           {this.renderTooltip.bind(this)}
           {this.renderLocation.bind(this)}
+          <div style={{ position: 'absolute', right: 0 }}>
+            <FullscreenControl container={document.querySelector('body')} />
+          </div>
           <CoronaInfo>
             <div className="legendData">
               <p>Legend COVID-19</p>
