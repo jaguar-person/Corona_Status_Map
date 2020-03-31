@@ -9,6 +9,7 @@ import { color, getColorArray } from "./settings/util";
 import CoronaInfo from "./dataRange/CoronaInfo";
 import axios from "axios";
 import { colorScale } from "./settings/colors";
+import HoverPanel from "./HoverPanel";
 
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21xZnE0cjZhbHI0In0.aCGjvePsRwkvQyNBjUEkaw";
 const mapStyle = "mapbox://styles/ugur222/ck74tfdlm22dm1in0t5zxxvgq";
@@ -48,6 +49,7 @@ export default class App extends React.Component {
     this.setState({
       clickedObject: null,
       dataType: null,
+      color: "",
       render: false
     });
   }
@@ -96,103 +98,51 @@ export default class App extends React.Component {
 
 
   renderTooltip() {
-    let { hoveredObject, pointerX, pointerY, dataType } = this.state || {};
+    let { hoveredObject, pointerX, pointerY, dataType, color } = this.state || {};
     return (
       hoveredObject && (
         <div
           className="data-hover"
           style={{
-            position: "fixed",
+            position: "absolute",
             zIndex: 1000,
             pointerEvents: "none",
             left: pointerX,
-            top: pointerY - 70,
+            top: pointerY,
           }}>
           <ul className="hoveredObjectData">
-
-            <li><h5 class="title is-5">{hoveredObject.city}</h5></li>
-
+            <li><h5 className="title is-5">{hoveredObject.city}</h5></li>
             {hoveredObject.city !== hoveredObject.province && (
               <li>
-                <span class="title is-4">{hoveredObject.province}</span>
+                <span className="title is-4">{hoveredObject.province}</span>
               </li>
             )}
-            <li><h5 class="title is-5">{hoveredObject.country}</h5></li>
-
+            <li><h5 className="title is-5">{hoveredObject.country}</h5></li>
             {dataType === "confirmed" && (
-              <div className="cases">
-                <li className="detail">
-                  <div className="img-detail">
-                    <img alt="total cases" src="https://img.icons8.com/color/48/000000/treatment-plan.png" />
-                  </div>
-                  <div className="info-detail">
-                    <span style={{ color: "#f39c12" }}>total cases</span>
-                    <strong>{hoveredObject.cases}</strong>
-                  </div>
-                </li>
-                <li className="detail">
-                  <div className="img-detail">
-                    <img alt="active cases:" src="https://img.icons8.com/color/48/000000/coronavirus.png" />
-                  </div>
-                  <div className="info-detail">
-                    <span style={{ color: "#f39c12" }}>active cases</span>
-                    <strong>{hoveredObject.active}</strong>
-                  </div>
-                </li>
-                <li className="detail">
-                  <div className="img-detail">
-                    <img alt="cases today:" src="https://img.icons8.com/color/48/000000/health-book.png" />
-                  </div>
-                  <div className="info-detail">
-                    <span style={{ color: "#f39c12" }}>cases today</span>
-                    <strong>{hoveredObject.todayCases}</strong>
-                  </div>
-                </li>
-              </div>
+              <li className="cases">
+                <HoverPanel src="https://img.icons8.com/color/48/000000/treatment-plan.png"
+                  color={color} caseValue={hoveredObject.cases} caseType={"Total Cases"} />
+                <HoverPanel src="https://img.icons8.com/color/48/000000/coronavirus.png"
+                  color={color} caseValue={hoveredObject.active} caseType={"Active Cases"} />
+                <HoverPanel src="https://img.icons8.com/color/48/000000/health-book.png"
+                  color={color} caseValue={hoveredObject.todayCases} caseType={"Cases Today"} />
+              </li>
             )}
             {dataType === "deaths" && (
-              <div className="cases">
-                <li className="detail">
-                  <div className="img-detail">
-                    <img alt="Total deaths" src="https://img.icons8.com/color/48/000000/cemetery.png" />
-                  </div>
-                  <div className="info-detail">
-                    <span style={{ color: "red" }}>total deaths</span>
-                    <strong>{hoveredObject.deaths}</strong>
-                  </div>
-                </li>
-                <li className="detail">
-                  <div className="img-detail">
-                    <img alt="In critical condition" src="https://img.icons8.com/color/48/000000/hospital-room--v2.png" />
-                  </div>
-                  <div className="info-detail">
-                    <span style={{ color: "red" }}>In critical condition</span>
-                    <strong>{hoveredObject.critical}</strong>
-                  </div>
-                </li>
-                <li className="detail">
-                  <div className="img-detail">
-                    <img alt="deaths today:" src="https://img.icons8.com/color/48/000000/death.png" />
-                  </div>
-                  <div className="info-detail">
-                    <span style={{ color: "red" }}>deaths today</span>
-                    <strong>{hoveredObject.todayDeaths}</strong>
-                  </div>
-                </li>
-              </div>
+              <li className="cases">
+                <HoverPanel src="https://img.icons8.com/color/48/000000/cemetery.png"
+                  color={color} caseValue={hoveredObject.deaths} caseType={"Total Deaths"} />
+                <HoverPanel src="https://img.icons8.com/color/48/000000/hospital-room--v2.png"
+                  color={color} caseValue={hoveredObject.critical} caseType={"Critical Condition"} />
+                <HoverPanel src="https://img.icons8.com/color/48/000000/death.png"
+                  color={color} caseValue={hoveredObject.todayDeaths} caseType={"Deaths Today"} />
+              </li>
             )}
             {dataType === "recovered" && (
-              <div className="cases">
-                <li className="detail">
-                  <div className="img-detail">
-                    <img alt="Total recovered" src="https://img.icons8.com/color/48/000000/recovery.png" />
-                  </div>
-                  <div className="info-detail">
-                    <span style={{ color: "#006d2c" }}>total recovered</span>
-                    <strong >{hoveredObject.recovered}</strong>
-                  </div>
-                </li>
-              </div>
+              <li className="cases">
+                <HoverPanel src="https://img.icons8.com/color/48/000000/recovery.png"
+                  color={color} caseValue={hoveredObject.recovered} caseType={"Total Recovered"} />
+              </li>
             )}
           </ul>
         </div>
@@ -205,7 +155,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const elevation = scaleLinear([0, 100000], [0, 15000]);
+    const elevation = scaleLinear([0, 100000], [0, 10000]);
     const radiusColumns = 15000;
     const layers = [
       new ColumnLayer({
@@ -217,7 +167,7 @@ export default class App extends React.Component {
         extruded: true,
         transitions: {
           getElevation: {
-            duration: 2000,
+            duration: 1000,
             easing: easeBackOut,
             enter: value => [60]
           },
@@ -233,6 +183,7 @@ export default class App extends React.Component {
           this.setState({
             hoveredObject: info.object,
             dataType: "deaths",
+            color: "#a50f15",
             pointerX: info.x,
             pointerY: info.y
           }),
@@ -248,6 +199,13 @@ export default class App extends React.Component {
         ...this.props,
         pickable: controlsOn,
         extruded: true,
+        transitions: {
+          getElevation: {
+            duration: 2000,
+            easing: easeBackOut,
+            enter: value => [40]
+          },
+        },
         getPosition: d => d.coordinates,
         diskResolution: 10,
         radius: radiusColumns,
@@ -259,6 +217,7 @@ export default class App extends React.Component {
           this.setState({
             hoveredObject: info.object,
             dataType: "recovered",
+            color: "#006d2c",
             pointerX: info.x,
             pointerY: info.y
           }),
@@ -277,9 +236,9 @@ export default class App extends React.Component {
         extruded: true,
         transitions: {
           getElevation: {
-            duration: 2000,
+            duration: 3000,
             easing: easeBackOut,
-            enter: value => [10]
+            enter: value => [20]
           },
         },
         getPosition: d => d.coordinates,
@@ -293,6 +252,7 @@ export default class App extends React.Component {
           this.setState({
             hoveredObject: info.object,
             dataType: "confirmed",
+            color: "#f39c12",
             pointerX: info.x,
             pointerY: info.y
           }),

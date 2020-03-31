@@ -6,6 +6,7 @@
     position: absolute;
     width: 200px;
     height: 200px;
+
     .legendData {
         padding: 10px;
         li {
@@ -19,6 +20,12 @@
             li {
                 &:nth-child(1) {
                     &:before {
+                        @media not all and (min-resolution: 0.001dpcm) {
+                            width: 35px;
+                        }
+                        @-moz-document url-prefix() {
+                            width: 35px;
+                        }
                         content: "●";
                         display: inline-block;
                         width: 27px;
@@ -28,6 +35,12 @@
                 }
                 &:nth-child(3) {
                     &:before {
+                        @media not all and (min-resolution: 0.001dpcm) {
+                            width: 35px;
+                        }
+                        @-moz-document url-prefix() {
+                            width: 35px;
+                        }
                         content: "●";
                         display: inline-block;
                         width: 25px;
@@ -37,6 +50,12 @@
                 }
                 &:nth-child(2) {
                     &:before {
+                        @media not all and (min-resolution: 0.001dpcm) {
+                            width: 35px;
+                        }
+                        @-moz-document url-prefix() {
+                            width: 35px;
+                        }
                         content: "●";
                         display: inline-block;
                         width: 25px;

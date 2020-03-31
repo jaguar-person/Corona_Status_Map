@@ -3,7 +3,7 @@
 
 This dataviz uses react-map-gl and deck.gl to render Mapbox maps with different layers on top. With this data viz you can find out how many people have recovered, contracted and died by the COVID-19 virus in each country.
 
-![Example Image of the webapp](https://i.imgur.com/zDmtFHD.png)
+![Example Image of the webapp](https://i.imgur.com/6E7YtOU.png)
 
 This application was build using the following tools:
 - [Mapbox-GL](https://github.com/mapbox/mapbox-gl-js)

@@ -3,7 +3,6 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, Brush, Text, ResponsiveContaine
 import axios from "axios";
 import moment from "moment";
 import { colorScale as colorScaleDetail } from "../settings/colors";
-
 let countryName, dataType, data, color, gradient;
 
 export default class Detailgraph extends Component {
@@ -105,10 +104,10 @@ export default class Detailgraph extends Component {
                                     animationEasing={"ease-in-out"} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                                     dataKey="Cases" stroke={color} type="natural" dot={false} travellerWidth={4} strokeWidth={3}
                                     activeDot={{ fill: "#000000", stroke: "#FFFFFF", strokeWidth: 1, r: 5 }} fill="url(#colorUv)" />
-                                <Brush dataKey="Date" tickFormatter={this.xAxisTickFormatter} height={40} startIndex={Math.round(data.length * 0.75)}  stroke={color}>
+                                <Brush dataKey="Date" tickFormatter={this.xAxisTickFormatter} height={40} startIndex={Math.round(data.length * 0.75)} fill="rgba(54, 54, 54,0.1)" stroke="#363636">
                                     <AreaChart >
                                         <YAxis tick={false} width={0} hide domain={["auto", "auto"]} />
-                                        <Area fill="url(#colorUv)" type="natural" dataKey="Cases" stroke={color} strokeWidth={2} name="cases" dot={false} />
+                                        <Area fill="url(#colorUv)" type="natural" dataKey="Cases" stroke={color} strokeWidth={1} name="cases" dot={false} />
                                     </AreaChart>
                                 </Brush>
                             </AreaChart>

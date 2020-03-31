@@ -39,6 +39,10 @@
     button:hover {
         cursor: pointer;
     }
+    .recharts-layer.recharts-brush-texts {
+        font-weight: bolder;
+        font-size: 1.1em;
+    }
 }
 
 .custom-tooltip {
@@ -51,7 +55,6 @@
         font-weight: bold;
     }
 }
-
 
 // LOADING
 .loading {
@@ -66,5 +69,3 @@
         border-radius: 100%;
     }
 }
-
-
