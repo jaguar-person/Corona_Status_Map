@@ -91,8 +91,6 @@ export default class App extends React.Component {
       })
     this.setFilters();
   }
-
-
   renderTooltip() {
     let { hoveredObject, pointerX, pointerY, dataType, color } = this.state || {};
     return (
@@ -214,7 +212,6 @@ export default class App extends React.Component {
             dataType: "recovered",
             clickedObject: info.object
           })
-
       }),
       new ColumnLayer({
         id: "column-layer-3",
