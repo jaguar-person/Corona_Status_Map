@@ -99,7 +99,7 @@ export default class Detailgraph extends Component {
                     <div className="panel-description">
                         <h1 className="panel-header title is-2">{countryName}</h1>
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={data} margin={{ top: 5, right: 70, left: 0, bottom: 5 }}>
+                            <AreaChart data={data} margin={{ top: 5, right: 60, left: 0, bottom: 5 }}>
                                 <defs>
                                     <linearGradient id="colorUv" x1="0" y1={100} x2="0" y2="0" gradientUnits="userSpaceOnUse">
                                         {gradient.map((colors, i) => {

@@ -2,7 +2,6 @@
 @import "legend.scss";
 @import "hover.scss";
 
-
 html,
 body,
 #root {
@@ -16,33 +15,12 @@ body {
 
     .mapboxgl-ctrl.mapboxgl-ctrl-group {
         background: transparent;
-        box-shadow: 0 0 35px 0 rgba(73,80,87,.15);
+        box-shadow: 0 0 35px 0 rgba(73, 80, 87, 0.15);
         float: right;
     }
 
     span {
         font-weight: bold;
         margin-bottom: 40px;
-    }
-}
-@media only screen and (max-width: 1023px) {
-    .mapboxgl-ctrl-top-left {
-        width: 100%;
-    }
-    .explainPopup .info-panel {
-        display: none;
-    }
-
-    .info-panel {
-        .content {
-            width: 85%;
-        }
-    }
-
-    .mapboxgl-ctrl-top-left .mapboxgl-ctrl {
-        margin: 0 auto;
-        margin-top: 10px;
-        float: initial;
-        min-width: 95%;
     }
 }
