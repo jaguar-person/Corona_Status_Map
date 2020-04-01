@@ -101,15 +101,7 @@ export default class App extends React.Component {
     let { hoveredObject, pointerX, pointerY, dataType, color } = this.state || {};
     return (
       hoveredObject && (
-        <div
-          className="data-hover"
-          style={{
-            position: "absolute",
-            zIndex: 1000,
-            pointerEvents: "none",
-            left: pointerX,
-            top: pointerY,
-          }}>
+        <div className="data-hover" style={{ left: pointerX, top: pointerY }}>
           <ul className="hoveredObjectData">
             <li><h5 className="title is-5">{hoveredObject.city}</h5></li>
             {hoveredObject.city !== hoveredObject.province && (

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { AreaChart, Area, XAxis, YAxis, Tooltip, Brush, Text, ResponsiveContainer } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, Tooltip, Brush, ResponsiveContainer } from "recharts";
 import axios from "axios";
 import moment from "moment";
 import { colorScale as colorScaleDetail } from "../settings/colors";
@@ -77,6 +77,17 @@ export default class Detailgraph extends Component {
         return null;
     };
 
+    CustomizedAxisTick = ({ x, y, payload }) => {
+        return (
+            <g transform={`translate(${x},${y})`}>
+                <text x={23} y={3} dy={14} fontSize="1em" fontFamily="bold" textAnchor="end" fill="#363636">
+                    {moment(payload.value)
+                        .format("ll")
+                        .slice(0, 6)}</text>
+            </g>
+        );
+    }
+
     render() {
         countryName = this.state.countryName;
         data = this.state.data;
@@ -88,7 +99,7 @@ export default class Detailgraph extends Component {
                     <div className="panel-description">
                         <h1 className="panel-header title is-2">{countryName}</h1>
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={data} margin={{ top: 5, right: 70, left: 50, bottom: 5 }}>
+                            <AreaChart data={data} margin={{ top: 5, right: 70, left: 0, bottom: 5 }}>
                                 <defs>
                                     <linearGradient id="colorUv" x1="0" y1={100} x2="0" y2="0" gradientUnits="userSpaceOnUse">
                                         {gradient.map((colors, i) => {
@@ -96,12 +107,11 @@ export default class Detailgraph extends Component {
                                         })}
                                     </linearGradient>
                                 </defs>
-                                <XAxis dataKey="Date" tickFormatter={this.xAxisTickFormatter} tickCount={10} minTickGap={10} tickSize={4} dx={14} allowDataOverflow={true} />
-                                <YAxis type="number" domain={[0, 100]} padding={{ top: 2.5, bottom: 5 }} orientation='left'
-                                    label={<Text style={{ fontSize: '22px', fontWeight: 'bold', fill: color }} x={0} y={0} dx={20} dy={150} offset={0} angle={-90}>Cases</Text>} />
+                                <XAxis dataKey="Date" tickCount={10} tick={this.CustomizedAxisTick} minTickGap={10} tickSize={4} dx={14} allowDataOverflow={true} />
+                                <YAxis type="number" domain={[0, 100]} />
                                 <Tooltip content={this.CustomTooltip} animationDuration={0} />
                                 <Area animationDuration={4000}
-                                    animationEasing={"ease-in-out"} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                                    animationEasing={"ease-in-out"} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
                                     dataKey="Cases" stroke={color} type="natural" dot={false} travellerWidth={4} strokeWidth={3}
                                     activeDot={{ fill: "#000000", stroke: "#FFFFFF", strokeWidth: 1, r: 5 }} fill="url(#colorUv)" />
                                 <Brush dataKey="Date" tickFormatter={this.xAxisTickFormatter} height={40} startIndex={Math.round(data.length * 0.75)} fill="rgba(54, 54, 54,0.1)" stroke="#363636">
