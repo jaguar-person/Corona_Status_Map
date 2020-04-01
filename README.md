@@ -4,7 +4,7 @@
 This platform uses react-map-gl and deck.gl to render Mapbox maps with different layers on top. With this data viz you can find out how many people have recovered, contracted and died by the COVID-19 virus in each country.
 
  [Live demo](ncov19update.com)
- 
+
 ![Example Image of the webapp](https://i.imgur.com/6E7YtOU.png)
 
 This application was build using the following tools:
@@ -12,7 +12,9 @@ This application was build using the following tools:
 - [DECK.GL](https://deck.gl/#/e)
 - [React](https://github.com/facebook/react)
 - [D3-scale](https://github.com/d3/d3-scale)
-- [Coronavirus-tracker-api](https://github.com/ExpDev07/coronavirus-tracker-api)
+- [NovelCovid AP](https://documenter.getpostman.com/view/8854915/SzS7R6uu?version=latest)
+- [COVID19API](https://documenter.getpostman.com/view/10808728/SzS8rjbc?version=latest)
+- [icons8 for Medical icons](https://icons8.com/icon/set/medical/color)
 
 ## Available Scripts
 
