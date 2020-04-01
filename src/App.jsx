@@ -6,7 +6,6 @@ import { easeBackOut } from 'd3';
 import { color, getColorArray } from "./settings/util";
 import CoronaInfo from "./dataRange/CoronaInfo";
 import CoronaRange from "./dataRange/CoronaRange"
-import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 import axios from "axios";
 
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21xZnE0cjZhbHI0In0.aCGjvePsRwkvQyNBjUEkaw";
@@ -22,7 +21,7 @@ const INITIAL_VIEW_STATE = {
 };
 
 let data, collectionCases
-const elevation = scaleLinear([0, 10], [0, 10]);
+const elevation = scaleLinear([0, 100000], [0, 15000]);
 const radiusColumns = 15000;
 
 export default class App extends React.Component {
