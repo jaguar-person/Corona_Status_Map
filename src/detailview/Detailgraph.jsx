@@ -80,7 +80,7 @@ export default class Detailgraph extends Component {
     CustomizedAxisTick = ({ x, y, payload }) => {
         return (
             <g transform={`translate(${x},${y})`}>
-                <text x={23} y={3} dy={14} fontSize="1em" fontFamily="bold" textAnchor="end" fill="#363636">
+                <text x={23} y={0} dy={14} fontSize="0.90em" fontFamily="bold" textAnchor="end" fill="#363636">
                     {moment(payload.value)
                         .format("ll")
                         .slice(0, 6)}</text>
@@ -107,7 +107,7 @@ export default class Detailgraph extends Component {
                                         })}
                                     </linearGradient>
                                 </defs>
-                                <XAxis dataKey="Date" tickCount={10} tick={this.CustomizedAxisTick} minTickGap={10} tickSize={4} dx={14} allowDataOverflow={true} />
+                                <XAxis dataKey="Date" tickCount={10} tick={this.CustomizedAxisTick} minTickGap={10} tickSize={7} dx={14} allowDataOverflow={true} />
                                 <YAxis type="number" domain={[0, 100]} />
                                 <Tooltip content={this.CustomTooltip} animationDuration={0} />
                                 <Area animationDuration={4000}

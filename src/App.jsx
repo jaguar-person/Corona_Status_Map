@@ -23,10 +23,7 @@ const INITIAL_VIEW_STATE = {
   bearing: 5
 };
 
-
 let controlsOn = true;
-
-
 
 let data
 export default class App extends React.Component {
@@ -67,7 +64,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    document.title = "COVID-19 Data-Viz";
+    document.title = "NCOV19 UPDATE";
 
     axios.all([
       axios.get('https://corona.lmao.ninja/countries')])
@@ -88,7 +85,6 @@ export default class App extends React.Component {
             coordinates: [location.countryInfo.long, location.countryInfo.lat]
           };
         });
-
         this.setState({ data: data });
       })).catch((error) => {
         console.log(error); return [];
@@ -167,7 +163,7 @@ export default class App extends React.Component {
         getPosition: d => d.coordinates,
         diskResolution: 10,
         radius: radiusColumns,
-        offset: [5, 3],
+        offset: [5, 1],
         elevationScale: 50,
         getFillColor: d => getColorArray(color(d.deaths, [0, 55], colorScale[0])),
         getElevation: d => elevation(d.deaths),
@@ -201,7 +197,7 @@ export default class App extends React.Component {
         getPosition: d => d.coordinates,
         diskResolution: 10,
         radius: radiusColumns,
-        offset: [1, 0],
+        offset: [1.3, 0],
         elevationScale: 50,
         getFillColor: d => getColorArray(color(d.recovered, [0, 55], colorScale[1])),
         getElevation: d => elevation(d.recovered),
@@ -267,12 +263,15 @@ export default class App extends React.Component {
           </div>
           <CoronaInfo>
             <div className="legendData">
-              <p>Legend COVID-19</p>
+              <p>Legend NCOV19</p>
               <ul>
                 <li>Recovered</li>
-                <li>Infections</li>
+                <li>Cases</li>
                 <li>Deaths</li>
               </ul>
+            </div>
+            <div className="info-data">
+              <em>data source: <a href="https://github.com/NovelCOVID/API">NovelCOVID</a></em>
             </div>
           </CoronaInfo>
         </DeckGL>
