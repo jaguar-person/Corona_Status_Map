@@ -10,6 +10,7 @@ import CoronaInfo from "./dataRange/CoronaInfo";
 import axios from "axios";
 import { colorScale } from "./settings/colors";
 import HoverPanel from "./HoverPanel";
+// import { states } from "./data/states"
 
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21xZnE0cjZhbHI0In0.aCGjvePsRwkvQyNBjUEkaw";
 const mapStyle = "mapbox://styles/ugur222/ck74tfdlm22dm1in0t5zxxvgq";
@@ -62,13 +63,45 @@ export default class App extends React.Component {
       );
     }
   }
-
   componentDidMount() {
     document.title = "NCOV19 UPDATE";
+    // let casesState = {};
+    // let statesLocation = {};
+    // let testArray = [];
 
     axios.all([
-      axios.get('https://corona.lmao.ninja/countries')])
-      .then(axios.spread((World) => {
+      axios.get('https://corona.lmao.ninja/countries'),
+      axios.get(' https://corona.lmao.ninja/states')
+    ])
+      .then(axios.spread((World, usStates) => {
+        // let statesData = usStates.data;
+        // statesData.forEach(state => {
+        //   casesState = [{
+        //     deaths: state.deaths,
+        //     todayDeaths: state.todayDeaths,
+        //     todayCases: state.todayCases,
+        //     cases: state.cases,
+        //     active: state.active,
+        //     state: state.state,
+        //   }]
+        //   states.forEach(coordinates => {
+        //     statesLocation = {
+        //       countryInfo: {
+        //         lat: coordinates.latitude,
+        //         long: coordinates.longitude
+        //       }
+        //     }
+           
+        //   });
+        //   casesState.push(statesLocation);
+        //   testArray.push(casesState);
+         
+        // });
+      
+
+
+
+
         let WorldData = World.data || [];
         data = WorldData;
         data = data.map(function (location) {
@@ -80,7 +113,6 @@ export default class App extends React.Component {
             todayCases: location.todayCases,
             cases: location.cases,
             active: location.active,
-            flag: location.countryInfo.flag,
             country: location.country,
             coordinates: [location.countryInfo.long, location.countryInfo.lat]
           };
@@ -141,6 +173,7 @@ export default class App extends React.Component {
   }
 
   render() {
+
     const elevation = scaleLinear([0, 100000], [0, 10000]);
     const radiusColumns = 15000;
     const layers = [

@@ -9,6 +9,7 @@
     "@deck.gl/geo-layers": "^8.0.15",
     "@deck.gl/layers": "^8.0.15",
     "axios": "^0.19.2",
+    "bulma": "^0.7.5",
     "d3": "^5.15.0",
     "d3-color": "^1.2.3",
     "d3-ease": "^1.0.6",
@@ -23,11 +24,11 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.1",
     "react-map-gl": "^5.2.3",
-    "react-spring": "^8.0.27",
     "react-sanfona": "^1.4.0",
-    "bulma": "^0.7.5",
     "react-scripts": "^3.4.0",
-    "recharts": "^2.0.0-beta.1"
+    "react-spring": "^8.0.27",
+    "recharts": "^2.0.0-beta.1",
+    "underscore": "^1.10.2"
   },
   "scripts": {
     "start": "react-scripts start",
