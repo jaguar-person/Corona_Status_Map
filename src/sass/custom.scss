@@ -1,0 +1,26 @@
+@import "infopanel.scss";
+@import "legend.scss";
+@import "hoverPanel.scss";
+
+html,
+body,
+#root {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+body {
+    margin: 0;
+    padding: 0;
+
+    .mapboxgl-ctrl.mapboxgl-ctrl-group {
+        background: transparent;
+        box-shadow: 0 0 35px 0 rgba(73, 80, 87, 0.15);
+        float: right;
+    }
+
+    span {
+        font-weight: bold;
+        margin-bottom: 40px;
+    }
+}

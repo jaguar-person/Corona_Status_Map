@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "mapbox-gl/dist/mapbox-gl.css";
 import App from "./App";
-import "./css/index.scss";
+import "./sass/index.scss";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import * as serviceWorker from "./serviceWorker";
 ReactDOM.render(<App />, document.getElementById("root"));
 

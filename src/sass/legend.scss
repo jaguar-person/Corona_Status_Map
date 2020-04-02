@@ -1,0 +1,74 @@
+.info-Corona {
+    background: #ffff;
+    border-radius: 10px;
+    margin: 10px;
+    bottom: 20px;
+    position: absolute;
+    width: 230px;
+    height: 200px;
+    padding: 10px;
+
+    .legendData {
+        padding-bottom: 10px;
+        li {
+            list-style-type: none;
+        }
+        p {
+            font-weight: bolder;
+        }
+
+        ul {
+            li {
+                &:nth-child(1) {
+                    &:before {
+                        @media not all and (min-resolution: 0.001dpcm) {
+                            width: 35px;
+                        }
+                        @-moz-document url-prefix() {
+                            width: 35px;
+                        }
+                        content: "●";
+                        display: inline-block;
+                        width: 27px;
+                        color: #006d2c;
+                        font-size: 2em;
+                    }
+                }
+                &:nth-child(3) {
+                    &:before {
+                        @media not all and (min-resolution: 0.001dpcm) {
+                            width: 35px;
+                        }
+                        @-moz-document url-prefix() {
+                            width: 35px;
+                        }
+                        content: "●";
+                        display: inline-block;
+                        width: 25px;
+                        color: #a50f15;
+                        font-size: 1.7em;
+                    }
+                }
+                &:nth-child(2) {
+                    &:before {
+                        @media not all and (min-resolution: 0.001dpcm) {
+                            width: 35px;
+                        }
+                        @-moz-document url-prefix() {
+                            width: 35px;
+                        }
+                        content: "●";
+                        display: inline-block;
+                        width: 25px;
+                        color: #f39c12;
+                        font-size: 1.7em;
+                    }
+                }
+            }
+        }
+    }
+
+    .info-data {
+        font-size: smaller;
+    }
+}

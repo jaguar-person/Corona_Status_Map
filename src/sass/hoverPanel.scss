@@ -1,0 +1,36 @@
+.data-hover {
+    background: #ffffff;
+    box-shadow: 0 0 35px 0 rgba(73, 80, 87, 0.15);
+    white-space: nowrap;
+    border-radius: 10px;
+    position: absolute;
+    z-index: 1000;
+    @media not all and (min-resolution: 0.001dpcm) {
+        width: 18em;
+    }
+    width: 14em;
+    padding: 10px;
+    .hoveredObjectData {
+        .cases {
+            margin: 7px;
+        }
+    }
+    .detail {
+        display: flex;
+        .img-detail {
+            img {
+                margin-left: -10px;
+            }
+        }
+        .info-detail {
+            span {
+                display: block;
+                margin-top: auto;
+                margin-bottom: auto;
+                font-style: normal;
+                line-height: 1;
+            }
+            display: block;
+        }
+    }
+}

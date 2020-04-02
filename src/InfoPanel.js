@@ -13,7 +13,7 @@ class InfoPanel extends React.Component {
       <div className="info-panel">
         <div className="content">
           <button onClick={event => closeInfoPanel(event)}>
-          <span>X</span>
+            <span><i className="fas fa-times-circle"></i></span>
           </button>
           {this.props.children}
         </div>
