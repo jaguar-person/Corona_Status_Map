@@ -7,6 +7,7 @@ import Detailgraph from "./detailview/Detailgraph";
 import { easeBackOut } from 'd3';
 import { color, getColorArray } from "./settings/util";
 import CoronaInfo from "./dataRange/CoronaInfo";
+
 import axios from "axios";
 import { colorScale } from "./settings/colors";
 import HoverPanel from "./HoverPanel";
@@ -27,6 +28,7 @@ const INITIAL_VIEW_STATE = {
 let controlsOn = true;
 
 let data
+
 export default class App extends React.Component {
   state = {};
 
@@ -35,6 +37,7 @@ export default class App extends React.Component {
 
     this.state = {
       data: [],
+      collectionCases: [],
       render: false
     };
 
@@ -91,17 +94,12 @@ export default class App extends React.Component {
         //         long: coordinates.longitude
         //       }
         //     }
-           
+
         //   });
         //   casesState.push(statesLocation);
         //   testArray.push(casesState);
-         
+
         // });
-      
-
-
-
-
         let WorldData = World.data || [];
         data = WorldData;
         data = data.map(function (location) {
