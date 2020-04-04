@@ -12,7 +12,7 @@ export default class Detailgraph extends Component {
 
         this.state = {
             countryName: "",
-            data: [],
+            data: null,
             color: "",
             gradient: []
         };

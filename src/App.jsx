@@ -136,7 +136,7 @@ export default class App extends React.Component {
                     <HoverPanel src="https://img.icons8.com/color/48/000000/coronavirus.png"
                       color={color} caseValue={hoveredObject.active} caseType={"Active Cases"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/health-book.png"
-                      color={color} caseValue={hoveredObject.todayCases} caseType={"Cases Today"} />
+                      color={color} caseValue={hoveredObject.todayCases} caseType={"Cases reported Today"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
                       color="grey" caseValue={hoveredObject.updated} caseType={"Last updated"} />
                   </div>
@@ -152,7 +152,7 @@ export default class App extends React.Component {
                     <HoverPanel src="https://img.icons8.com/color/48/000000/hospital-room--v2.png"
                       color={color} caseValue={hoveredObject.critical} caseType={"Critical Condition"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/death.png"
-                      color={color} caseValue={hoveredObject.todayDeaths} caseType={"Deaths Today"} />
+                      color={color} caseValue={hoveredObject.todayDeaths} caseType={"Deaths reported Today"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
                       color="grey" caseValue={hoveredObject.updated} caseType={"Last updated"} />
                   </div>
@@ -183,8 +183,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log(data);
-    const elevation = scaleLinear([0, 120000], [0, 10000]);
+    const elevation = scaleLinear([0, 160000], [0, 10000]);
     const radiusColumns = 15000;
     const layers = [
       new ColumnLayer({
