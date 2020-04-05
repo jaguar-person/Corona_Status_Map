@@ -27,7 +27,7 @@ const INITIAL_VIEW_STATE = {
 
 let controlsOn = true;
 
-let data;
+let data, stateName, dataState;
 
 export default class App extends React.Component {
   state = {};
@@ -39,6 +39,8 @@ export default class App extends React.Component {
       data: [],
       collectionCases: [],
       render: false,
+      stateName: "",
+      dataState: []
     };
 
     this.closeInfoPanel = this.closeInfoPanel.bind(this);
@@ -68,6 +70,36 @@ export default class App extends React.Component {
   }
   componentDidMount() {
     document.title = "NCOV19 UPDATE";
+    this.fetchData();
+  }
+
+  fetchStateCases() {
+    axios.all([
+      axios.get(`https://corona.lmao.ninja/states/${stateName}`),
+    ]).then(axios.spread((statesUsa) => {
+
+      let statesData = statesUsa.data || [];
+      dataState = statesData;
+      dataState = dataState.map(function (location) {
+
+        return {
+          deaths: location.deaths,
+          todayDeaths: location.todayDeaths,
+          todayCases: location.todayCases,
+          cases: location.cases,
+          active: location.active,
+          state: location.state,
+        };
+      });
+
+      this.setState({ dataState: dataState });
+    })).catch((error) => {
+      console.log(error); return [];
+    })
+    dataState = this.state.dataState;
+  }
+
+  fetchData() {
     axios.all([
       axios.get('https://corona.lmao.ninja/countries'),
       axios.get('https://corona.lmao.ninja/v2/jhucsse')
@@ -111,11 +143,11 @@ export default class App extends React.Component {
     })).catch((error) => {
       console.log(error); return [];
     })
-    this.updateData();
+    data = this.state.data;
   }
   renderTooltip() {
     let { hoveredObject, pointerX, pointerY, dataType, color } = this.state || {};
-    this.updateData();
+    this.fetchData();
     return (
       hoveredObject && (
         <div className="data-hover" style={{ left: pointerX, top: pointerY }}>
@@ -175,11 +207,6 @@ export default class App extends React.Component {
         </div>
       )
     );
-  }
-
-  updateData() {
-    data = this.state.data;
-
   }
 
   render() {
