@@ -12,7 +12,7 @@ export default class Detailgraph extends Component {
 
         this.state = {
             countryName: "",
-            data: [],
+            data: null,
             color: "",
             gradient: []
         };
@@ -49,6 +49,7 @@ export default class Detailgraph extends Component {
             axios.get(`https://api.covid19api.com/total/country/${country}/status/${dataType}`)])
             .then(axios.spread((countryData) => {
                 data = countryData.data;
+                data = data.filter(item => (item.Cases !== 0));
                 this.setState({
                     data: data
                 });
@@ -110,7 +111,7 @@ export default class Detailgraph extends Component {
                                 <XAxis dataKey="Date" tickCount={10} tick={this.CustomizedAxisTick} minTickGap={10} tickSize={7} dx={14} allowDataOverflow={true} />
                                 <YAxis type="number" domain={[0, 100]} />
                                 <Tooltip content={this.CustomTooltip} animationDuration={0} />
-                                <Area animationDuration={4000}
+                                <Area animationDuration={2500}
                                     animationEasing={"ease-in-out"} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
                                     dataKey="Cases" stroke={color} type="natural" dot={false} travellerWidth={4} strokeWidth={3}
                                     activeDot={{ fill: "#000000", stroke: "#FFFFFF", strokeWidth: 1, r: 5 }} fill="url(#colorUv)" />
@@ -125,7 +126,7 @@ export default class Detailgraph extends Component {
                     </div>
                 ) : (
                         <div className="loading">
-                            <img src="asset/img/loader.gif" alt="Loading animation" />
+                            <img src="asset/img/loader.gif" alt="Cases are Loading" />
                              Loading...
                         </div>
                     )}

@@ -6,9 +6,9 @@
     position: absolute;
     z-index: 1000;
     @media not all and (min-resolution: 0.001dpcm) {
-        width: 18em;
+        min-width: 18em;
     }
-    width: 14em;
+    min-width: 14em;
     padding: 10px;
     .hoveredObjectData {
         .cases {

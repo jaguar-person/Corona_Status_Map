@@ -7,7 +7,7 @@ import Detailgraph from "./detailview/Detailgraph";
 import { easeBackOut } from 'd3';
 import { color, getColorArray } from "./settings/util";
 import CoronaInfo from "./dataRange/CoronaInfo";
-
+import moment from "moment";
 import axios from "axios";
 import { colorScale } from "./settings/colors";
 import HoverPanel from "./HoverPanel";
@@ -27,7 +27,7 @@ const INITIAL_VIEW_STATE = {
 
 let controlsOn = true;
 
-let data
+let data, stateName, dataState;
 
 export default class App extends React.Component {
   state = {};
@@ -38,7 +38,9 @@ export default class App extends React.Component {
     this.state = {
       data: [],
       collectionCases: [],
-      render: false
+      render: false,
+      stateName: "",
+      dataState: []
     };
 
     this.closeInfoPanel = this.closeInfoPanel.bind(this);
@@ -68,61 +70,84 @@ export default class App extends React.Component {
   }
   componentDidMount() {
     document.title = "NCOV19 UPDATE";
-    // let casesState = {};
-    // let statesLocation = {};
-    // let testArray = [];
+    this.fetchData();
+  }
 
+  fetchStateCases() {
+    axios.all([
+      axios.get(`https://corona.lmao.ninja/states/${stateName}`),
+    ]).then(axios.spread((statesUsa) => {
+
+      let statesData = statesUsa.data || [];
+      dataState = statesData;
+      dataState = dataState.map(function (location) {
+
+        return {
+          deaths: location.deaths,
+          todayDeaths: location.todayDeaths,
+          todayCases: location.todayCases,
+          cases: location.cases,
+          active: location.active,
+          state: location.state,
+        };
+      });
+
+      this.setState({ dataState: dataState });
+    })).catch((error) => {
+      console.log(error); return [];
+    })
+    dataState = this.state.dataState;
+  }
+
+  fetchData() {
     axios.all([
       axios.get('https://corona.lmao.ninja/countries'),
-      axios.get(' https://corona.lmao.ninja/states')
-    ])
-      .then(axios.spread((World, usStates) => {
-        // let statesData = usStates.data;
-        // statesData.forEach(state => {
-        //   casesState = [{
-        //     deaths: state.deaths,
-        //     todayDeaths: state.todayDeaths,
-        //     todayCases: state.todayCases,
-        //     cases: state.cases,
-        //     active: state.active,
-        //     state: state.state,
-        //   }]
-        //   states.forEach(coordinates => {
-        //     statesLocation = {
-        //       countryInfo: {
-        //         lat: coordinates.latitude,
-        //         long: coordinates.longitude
-        //       }
-        //     }
+      axios.get('https://corona.lmao.ninja/v2/jhucsse')
+    ]).then(axios.spread((World, provinces) => {
 
-        //   });
-        //   casesState.push(statesLocation);
-        //   testArray.push(casesState);
+      let provinceData = provinces.data || [];
+      provinces = provinceData;
+      provinces = provinces.map(function (province) {
+        return {
+          deaths: province.stats.deaths,
+          recovered: "not available",
+          cases: province.stats.confirmed,
+          province: province.province,
+          country: province.country,
+          coordinates: [parseFloat(province.coordinates.longitude), parseFloat(province.coordinates.latitude)]
+        };
+      });
 
-        // });
-        let WorldData = World.data || [];
-        data = WorldData;
-        data = data.map(function (location) {
-          return {
-            recovered: location.recovered,
-            deaths: location.deaths,
-            critical: location.critical,
-            todayDeaths: location.todayDeaths,
-            todayCases: location.todayCases,
-            cases: location.cases,
-            active: location.active,
-            country: location.country,
-            coordinates: [location.countryInfo.long, location.countryInfo.lat]
-          };
-        });
-        this.setState({ data: data });
-      })).catch((error) => {
-        console.log(error); return [];
-      })
-    this.setFilters();
+      let WorldData = World.data || [];
+      data = WorldData;
+      data = data.map(function (location) {
+
+        return {
+          recovered: location.recovered,
+          deaths: location.deaths,
+          critical: location.critical,
+          todayDeaths: location.todayDeaths,
+          todayCases: location.todayCases,
+          cases: location.cases,
+          active: location.active,
+          country: location.country,
+          updated: moment(location.updated).fromNow(),
+          coordinates: [location.countryInfo.long, location.countryInfo.lat]
+        };
+      });
+
+      data = data.concat(provinces);
+
+      data = data.filter(item => (item.province !== null));
+      this.setState({ data: data });
+    })).catch((error) => {
+      console.log(error); return [];
+    })
+    data = this.state.data;
   }
   renderTooltip() {
     let { hoveredObject, pointerX, pointerY, dataType, color } = this.state || {};
+    this.fetchData();
     return (
       hoveredObject && (
         <div className="data-hover" style={{ left: pointerX, top: pointerY }}>
@@ -138,26 +163,44 @@ export default class App extends React.Component {
               <li className="cases">
                 <HoverPanel src="https://img.icons8.com/color/48/000000/treatment-plan.png"
                   color={color} caseValue={hoveredObject.cases} caseType={"Total Cases"} />
-                <HoverPanel src="https://img.icons8.com/color/48/000000/coronavirus.png"
-                  color={color} caseValue={hoveredObject.active} caseType={"Active Cases"} />
-                <HoverPanel src="https://img.icons8.com/color/48/000000/health-book.png"
-                  color={color} caseValue={hoveredObject.todayCases} caseType={"Cases Today"} />
+                {hoveredObject.updated && (
+                  <div className="extra-info">
+                    <HoverPanel src="https://img.icons8.com/color/48/000000/coronavirus.png"
+                      color={color} caseValue={hoveredObject.active} caseType={"Active Cases"} />
+                    <HoverPanel src="https://img.icons8.com/color/48/000000/health-book.png"
+                      color={color} caseValue={hoveredObject.todayCases} caseType={"Cases reported Today"} />
+                    <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
+                      color="grey" caseValue={hoveredObject.updated} caseType={"Last updated"} />
+                  </div>
+                )}
               </li>
             )}
             {dataType === "deaths" && (
               <li className="cases">
                 <HoverPanel src="https://img.icons8.com/color/48/000000/cemetery.png"
                   color={color} caseValue={hoveredObject.deaths} caseType={"Total Deaths"} />
-                <HoverPanel src="https://img.icons8.com/color/48/000000/hospital-room--v2.png"
-                  color={color} caseValue={hoveredObject.critical} caseType={"Critical Condition"} />
-                <HoverPanel src="https://img.icons8.com/color/48/000000/death.png"
-                  color={color} caseValue={hoveredObject.todayDeaths} caseType={"Deaths Today"} />
+                {hoveredObject.updated && (
+                  <div className="extra-info">
+                    <HoverPanel src="https://img.icons8.com/color/48/000000/hospital-room--v2.png"
+                      color={color} caseValue={hoveredObject.critical} caseType={"Critical Condition"} />
+                    <HoverPanel src="https://img.icons8.com/color/48/000000/death.png"
+                      color={color} caseValue={hoveredObject.todayDeaths} caseType={"Deaths reported Today"} />
+                    <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
+                      color="grey" caseValue={hoveredObject.updated} caseType={"Last updated"} />
+                  </div>
+                )}
               </li>
             )}
             {dataType === "recovered" && (
               <li className="cases">
                 <HoverPanel src="https://img.icons8.com/color/48/000000/recovery.png"
                   color={color} caseValue={hoveredObject.recovered} caseType={"Total Recovered"} />
+                {hoveredObject.updated && (
+                  <div className="extra-info">
+                    <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
+                      color="grey" caseValue={hoveredObject.updated} caseType={"Last updated"} />
+                  </div>
+                )}
               </li>
             )}
           </ul>
@@ -166,13 +209,8 @@ export default class App extends React.Component {
     );
   }
 
-  setFilters() {
-    data = this.state.data;
-  }
-
   render() {
-
-    const elevation = scaleLinear([0, 100000], [0, 10000]);
+    const elevation = scaleLinear([0, 160000], [0, 10000]);
     const radiusColumns = 15000;
     const layers = [
       new ColumnLayer({
@@ -228,7 +266,7 @@ export default class App extends React.Component {
         radius: radiusColumns,
         offset: [1.3, 0],
         elevationScale: 50,
-        getFillColor: d => getColorArray(color(d.recovered, [0, 55], colorScale[1])),
+        getFillColor: d => getColorArray(color(1000, [0, 55], colorScale[1])),
         getElevation: d => elevation(d.recovered),
         onHover: info =>
           this.setState({
@@ -277,7 +315,7 @@ export default class App extends React.Component {
             dataType: "confirmed",
             clickedObject: info.object
           })
-      }),
+      })
     ];
 
     return (

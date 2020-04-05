@@ -22,3 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .firebase/hosting.YnVpbGQ.cache
+build/index.html
+build/asset-manifest.json
