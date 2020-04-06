@@ -1,7 +1,7 @@
 import React from "react";
 import DeckGL, { ColumnLayer } from "deck.gl";
 import { StaticMap, FullscreenControl } from "react-map-gl";
-import InfoPanel from "./InfoPanel";
+import Modal from "./Modal";
 import { scaleLinear } from "d3-scale";
 import Detailgraph from "./detailview/Detailgraph";
 import { easeBackOut } from 'd3';
@@ -11,7 +11,6 @@ import moment from "moment";
 import axios from "axios";
 import { colorScale } from "./settings/colors";
 import HoverPanel from "./HoverPanel";
-// import { states } from "./data/states"
 
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21xZnE0cjZhbHI0In0.aCGjvePsRwkvQyNBjUEkaw";
 const mapStyle = "mapbox://styles/ugur222/ck74tfdlm22dm1in0t5zxxvgq";
@@ -27,7 +26,7 @@ const INITIAL_VIEW_STATE = {
 
 let controlsOn = true;
 
-let data, stateName, dataState;
+let data;
 
 export default class App extends React.Component {
   state = {};
@@ -43,11 +42,11 @@ export default class App extends React.Component {
       dataState: []
     };
 
-    this.closeInfoPanel = this.closeInfoPanel.bind(this);
+    this.closeModal = this.closeModal.bind(this);
 
   }
 
-  closeInfoPanel() {
+  closeModal() {
     controlsOn = true;
     this.setState({
       clickedObject: null,
@@ -62,41 +61,21 @@ export default class App extends React.Component {
     if (clickedObject != null) {
       controlsOn = false;
       return (
-        <InfoPanel closeInfoPanel={this.closeInfoPanel}>
+        <Modal closeModal={this.closeModal}>
           <Detailgraph clickedObject={clickedObject} dataType={dataType} />
-        </InfoPanel>
+        </Modal>
       );
     }
   }
   componentDidMount() {
-    document.title = "NCOV19 UPDATE";
+    document.title = "NCOV19UPDATE";
     this.fetchData();
+    this.timer = setInterval(() => this.fetchData(), 5000);
   }
 
-  fetchStateCases() {
-    axios.all([
-      axios.get(`https://corona.lmao.ninja/states/${stateName}`),
-    ]).then(axios.spread((statesUsa) => {
-
-      let statesData = statesUsa.data || [];
-      dataState = statesData;
-      dataState = dataState.map(function (location) {
-
-        return {
-          deaths: location.deaths,
-          todayDeaths: location.todayDeaths,
-          todayCases: location.todayCases,
-          cases: location.cases,
-          active: location.active,
-          state: location.state,
-        };
-      });
-
-      this.setState({ dataState: dataState });
-    })).catch((error) => {
-      console.log(error); return [];
-    })
-    dataState = this.state.dataState;
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    this.timer = null;
   }
 
   fetchData() {
@@ -130,6 +109,7 @@ export default class App extends React.Component {
           todayCases: location.todayCases,
           cases: location.cases,
           active: location.active,
+          tests: location.tests,
           country: location.country,
           updated: moment(location.updated).fromNow(),
           coordinates: [location.countryInfo.long, location.countryInfo.lat]
@@ -147,7 +127,6 @@ export default class App extends React.Component {
   }
   renderTooltip() {
     let { hoveredObject, pointerX, pointerY, dataType, color } = this.state || {};
-    this.fetchData();
     return (
       hoveredObject && (
         <div className="data-hover" style={{ left: pointerX, top: pointerY }}>
@@ -162,13 +141,13 @@ export default class App extends React.Component {
             {dataType === "confirmed" && (
               <li className="cases">
                 <HoverPanel src="https://img.icons8.com/color/48/000000/treatment-plan.png"
-                  color={color} caseValue={hoveredObject.cases} caseType={"Total Cases"} />
+                  color={color} caseValue={hoveredObject.cases.toLocaleString()} caseType={"Total reported Cases"} />
                 {hoveredObject.updated && (
                   <div className="extra-info">
                     <HoverPanel src="https://img.icons8.com/color/48/000000/coronavirus.png"
-                      color={color} caseValue={hoveredObject.active} caseType={"Active Cases"} />
+                      color={color} caseValue={hoveredObject.active.toLocaleString()} caseType={"Active Cases"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/health-book.png"
-                      color={color} caseValue={hoveredObject.todayCases} caseType={"Cases reported Today"} />
+                      color={color} caseValue={hoveredObject.todayCases.toLocaleString()} caseType={"Cases reported Today"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
                       color="grey" caseValue={hoveredObject.updated} caseType={"Last updated"} />
                   </div>
@@ -177,14 +156,14 @@ export default class App extends React.Component {
             )}
             {dataType === "deaths" && (
               <li className="cases">
-                <HoverPanel src="https://img.icons8.com/color/48/000000/cemetery.png"
-                  color={color} caseValue={hoveredObject.deaths} caseType={"Total Deaths"} />
+                <HoverPanel src="https://img.icons8.com/color/48/000000/die-in-bed.png"
+                  color={color} caseValue={hoveredObject.deaths.toLocaleString()} caseType={"Total reported Deaths"} />
                 {hoveredObject.updated && (
                   <div className="extra-info">
                     <HoverPanel src="https://img.icons8.com/color/48/000000/hospital-room--v2.png"
-                      color={color} caseValue={hoveredObject.critical} caseType={"Critical Condition"} />
+                      color={color} caseValue={hoveredObject.critical.toLocaleString()} caseType={"Critical Condition"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/death.png"
-                      color={color} caseValue={hoveredObject.todayDeaths} caseType={"Deaths reported Today"} />
+                      color={color} caseValue={hoveredObject.todayDeaths.toLocaleString()} caseType={"Deaths reported Today"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
                       color="grey" caseValue={hoveredObject.updated} caseType={"Last updated"} />
                   </div>
@@ -194,9 +173,11 @@ export default class App extends React.Component {
             {dataType === "recovered" && (
               <li className="cases">
                 <HoverPanel src="https://img.icons8.com/color/48/000000/recovery.png"
-                  color={color} caseValue={hoveredObject.recovered} caseType={"Total Recovered"} />
+                  color={color} caseValue={hoveredObject.recovered.toLocaleString()} caseType={"Total reported Recoveres"} />
                 {hoveredObject.updated && (
                   <div className="extra-info">
+                    <HoverPanel src="https://img.icons8.com/color/48/000000/medical-thermometer.png"
+                     color={color} caseValue={hoveredObject.tests.toLocaleString()} caseType={"Total carried out Tests"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
                       color="grey" caseValue={hoveredObject.updated} caseType={"Last updated"} />
                   </div>

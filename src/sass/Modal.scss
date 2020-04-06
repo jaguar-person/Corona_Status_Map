@@ -1,47 +1,25 @@
-.info-panel {
-    position: absolute; /* Sit on top of the page content */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
-    z-index: 102; /* Specify a stack order in case you're using a different order for other elements */
-    cursor: pointer; /* Add a pointer on hover */
-
-    .content {
+.modal {
+    .modal-content {
+        overflow: hidden;
         width: 900px;
-        height: 500px;
         border-radius: 10px;
-
-        .panel-description {
-            width: 100%;
-            height: 400px;
-        }
-
+        height: 600px;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: #fff;
+        background: #ffffff;
         padding: 20px;
-    }
 
-    button {
-        background: transparent;
-        border: 0px;
-        float: right;
-        span {
-            font-size: 25px;
-            color: #000000;
+        .modal-description {
+            width: 100%;
+            height: 400px;
         }
-    }
 
-    button:hover {
-        cursor: pointer;
-    }
-    .recharts-layer.recharts-brush-texts {
-        font-weight: 600;
-        font-size: 1em;
+        .modal-close::before,
+        .modal-close::after {
+            background: #363636;
+        }
     }
 
     // LOADING
@@ -71,15 +49,42 @@
 }
 
 @media only screen and (max-width: 1023px) {
-    .info-panel {
+    .modal {
         .recharts-layer.recharts-brush-texts {
             font-size: 0.7em;
         }
         g.recharts-cartesian-axis-ticks {
             font-size: 0.9em;
         }
-        .content {
+        .modal-content {
             width: 95%;
+            margin: 0 auto;
+            height: 100%;
+
+            .modal-description {
+                width: 100%;
+                height: 600px;
+            }
         }
+    }
+}
+
+@media only screen and (max-width: 720px) {
+    .modal {
+        .modal-content {
+            .modal-description {
+                height: 400px;
+            }
+        }
+    }
+}
+
+.tabs {
+    display: block;
+
+    button {
+        background: transparent;
+        border: 0px;
+        font-size: small;
     }
 }

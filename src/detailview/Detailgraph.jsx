@@ -3,7 +3,8 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, Brush, ResponsiveContainer } fr
 import axios from "axios";
 import moment from "moment";
 import { colorScale as colorScaleDetail } from "../settings/colors";
-let countryName, dataType, data, color, gradient;
+
+let countryName, dataType, data, color, gradient, graphType;
 
 export default class Detailgraph extends Component {
 
@@ -14,6 +15,8 @@ export default class Detailgraph extends Component {
             countryName: "",
             data: null,
             color: "",
+            graphType: "auto",
+            styleSelected: "active",
             gradient: []
         };
         this.container = React.createRef();
@@ -58,6 +61,11 @@ export default class Detailgraph extends Component {
             })
     }
 
+    changeGraphType = (e, scaletype) => {
+        console.log(scaletype)
+        // this.setState({ graphType: "log" });
+    }
+
     CustomTooltip = ({ active, payload, label }) => {
         let dateTip = moment(label)
             .format("llll")
@@ -94,11 +102,25 @@ export default class Detailgraph extends Component {
         data = this.state.data;
         gradient = this.state.gradient;
         color = this.state.color;
+        graphType = this.state.graphType;
+
+
+
         return (
             <div ref={e => (this.container = e)}>
                 {this.state.data ? (
-                    <div className="panel-description">
-                        <h1 className="panel-header title is-2">{countryName}</h1>
+                    <div className="modal-description">
+                        <h1 className="modal-header title is-2">{countryName}</h1>
+                        <div className="tabs">
+                            <ul>
+                                <li > <a onClick={() => {
+                                    this.setState({ graphType: "auto" });
+                                }}>linear</a></li>
+                                <li> <a onClick={() => {
+                                    this.setState({ graphType: "log" });
+                                }}>logarithmic</a></li>
+                            </ul>
+                        </div>
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={data} margin={{ top: 5, right: 60, left: 0, bottom: 5 }}>
                                 <defs>
@@ -109,7 +131,7 @@ export default class Detailgraph extends Component {
                                     </linearGradient>
                                 </defs>
                                 <XAxis dataKey="Date" tickCount={10} tick={this.CustomizedAxisTick} minTickGap={10} tickSize={7} dx={14} allowDataOverflow={true} />
-                                <YAxis type="number" domain={[0, 100]} />
+                                <YAxis scale={graphType} type="number" domain={['auto', 'auto']} />
                                 <Tooltip content={this.CustomTooltip} animationDuration={0} />
                                 <Area animationDuration={2500}
                                     animationEasing={"ease-in-out"} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
