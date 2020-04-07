@@ -90,6 +90,7 @@ export default class App extends React.Component {
         return {
           deaths: province.stats.deaths,
           recovered: "not available",
+          diskResolution: 4,
           cases: province.stats.confirmed,
           province: province.province,
           country: province.country,
@@ -97,6 +98,9 @@ export default class App extends React.Component {
         };
       });
 
+
+      provinces = provinces.filter(item => (item.country !== "Netherlands" && item.country !== "France" &&
+        item.province !== null && item.country !== "United Kingdom" && item.country !== "Denmark" && item.province !== "Hong Kong"));
       let WorldData = World.data || [];
       data = WorldData;
       data = data.map(function (location) {
@@ -104,6 +108,7 @@ export default class App extends React.Component {
         return {
           recovered: location.recovered,
           deaths: location.deaths,
+          diskShape: 10,
           critical: location.critical,
           todayDeaths: location.todayDeaths,
           todayCases: location.todayCases,
@@ -118,7 +123,7 @@ export default class App extends React.Component {
 
       data = data.concat(provinces);
 
-      data = data.filter(item => (item.province !== null));
+
       this.setState({ data: data });
     })).catch((error) => {
       console.log(error); return [];
@@ -141,13 +146,13 @@ export default class App extends React.Component {
             {dataType === "confirmed" && (
               <li className="cases">
                 <HoverPanel src="https://img.icons8.com/color/48/000000/treatment-plan.png"
-                  color={color} caseValue={hoveredObject.cases.toLocaleString()} caseType={"Total reported Cases"} />
+                  color={color} caseValue={hoveredObject.cases.toLocaleString()} caseType={"Reported Cases"} />
                 {hoveredObject.updated && (
                   <div className="extra-info">
                     <HoverPanel src="https://img.icons8.com/color/48/000000/coronavirus.png"
                       color={color} caseValue={hoveredObject.active.toLocaleString()} caseType={"Active Cases"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/health-book.png"
-                      color={color} caseValue={hoveredObject.todayCases.toLocaleString()} caseType={"Cases reported Today"} />
+                      color={color} caseValue={hoveredObject.todayCases.toLocaleString()} caseType={"Reported Today"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
                       color="grey" caseValue={hoveredObject.updated} caseType={"Last updated"} />
                   </div>
@@ -157,13 +162,13 @@ export default class App extends React.Component {
             {dataType === "deaths" && (
               <li className="cases">
                 <HoverPanel src="https://img.icons8.com/color/48/000000/die-in-bed.png"
-                  color={color} caseValue={hoveredObject.deaths.toLocaleString()} caseType={"Total reported Deaths"} />
+                  color={color} caseValue={hoveredObject.deaths.toLocaleString()} caseType={"Reported Deaths"} />
                 {hoveredObject.updated && (
                   <div className="extra-info">
                     <HoverPanel src="https://img.icons8.com/color/48/000000/hospital-room--v2.png"
                       color={color} caseValue={hoveredObject.critical.toLocaleString()} caseType={"Critical Condition"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/death.png"
-                      color={color} caseValue={hoveredObject.todayDeaths.toLocaleString()} caseType={"Deaths reported Today"} />
+                      color={color} caseValue={hoveredObject.todayDeaths.toLocaleString()} caseType={"Reported Today"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
                       color="grey" caseValue={hoveredObject.updated} caseType={"Last updated"} />
                   </div>
@@ -173,11 +178,11 @@ export default class App extends React.Component {
             {dataType === "recovered" && (
               <li className="cases">
                 <HoverPanel src="https://img.icons8.com/color/48/000000/recovery.png"
-                  color={color} caseValue={hoveredObject.recovered.toLocaleString()} caseType={"Total reported Recoveres"} />
+                  color={color} caseValue={hoveredObject.recovered.toLocaleString()} caseType={"Reported Recoveres"} />
                 {hoveredObject.updated && (
                   <div className="extra-info">
                     <HoverPanel src="https://img.icons8.com/color/48/000000/medical-thermometer.png"
-                     color={color} caseValue={hoveredObject.tests.toLocaleString()} caseType={"Total carried out Tests"} />
+                      color={color} caseValue={hoveredObject.tests.toLocaleString()} caseType={"Tested"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
                       color="grey" caseValue={hoveredObject.updated} caseType={"Last updated"} />
                   </div>
@@ -312,9 +317,10 @@ export default class App extends React.Component {
             <div className="legendData">
               <p>Legend NCOV19</p>
               <ul>
-                <li>Recovered</li>
-                <li>Cases</li>
-                <li>Deaths</li>
+                <li><abbr title="There is a delay between the day on which a person has recovered and the day on which the recovery is reported.">Recoverd**</abbr></li>
+                <li><abbr title="The actual number of infections with the novel coronavirus is higher than the number mentioned here. 
+                This is because not everyone who may be infected is tested for the virus.">Cases*</abbr></li>
+                <li><abbr title="There is a delay between the day on which a person dies and the day on which the death is reported.">Deaths**</abbr></li>
               </ul>
             </div>
             <div className="info-data">

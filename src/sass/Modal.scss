@@ -81,10 +81,7 @@
 
 .tabs {
     display: block;
-
-    button {
-        background: transparent;
-        border: 0px;
-        font-size: small;
-    }
+}
+.selected {
+    border-bottom:  1px solid black!important;
 }

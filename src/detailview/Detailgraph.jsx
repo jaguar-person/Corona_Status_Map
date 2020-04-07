@@ -1,8 +1,23 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, Brush, ResponsiveContainer } from "recharts";
 import axios from "axios";
 import moment from "moment";
 import { colorScale as colorScaleDetail } from "../settings/colors";
+
+
+export const buttons = [
+    {
+        name: "Linear",
+        scaleType: "linear",
+        id: 1
+    },
+    {
+        name: "Logarithmic",
+        scaleType: "log",
+        id: 2
+    },
+]
 
 let countryName, dataType, data, color, gradient, graphType;
 
@@ -16,7 +31,7 @@ export default class Detailgraph extends Component {
             data: null,
             color: "",
             graphType: "auto",
-            styleSelected: "active",
+            activeIndex: 0,
             gradient: []
         };
         this.container = React.createRef();
@@ -61,9 +76,8 @@ export default class Detailgraph extends Component {
             })
     }
 
-    changeGraphType = (e, scaletype) => {
-        console.log(scaletype)
-        // this.setState({ graphType: "log" });
+    changeGraphType = (index, props) => {
+
     }
 
     CustomTooltip = ({ active, payload, label }) => {
@@ -104,8 +118,6 @@ export default class Detailgraph extends Component {
         color = this.state.color;
         graphType = this.state.graphType;
 
-
-
         return (
             <div ref={e => (this.container = e)}>
                 {this.state.data ? (
@@ -113,12 +125,16 @@ export default class Detailgraph extends Component {
                         <h1 className="modal-header title is-2">{countryName}</h1>
                         <div className="tabs">
                             <ul>
-                                <li > <a onClick={() => {
-                                    this.setState({ graphType: "auto" });
-                                }}>linear</a></li>
-                                <li> <a onClick={() => {
-                                    this.setState({ graphType: "log" });
-                                }}>logarithmic</a></li>
+                                {buttons.map((item, index) =>
+                                    <li key={index} >
+                                        <a onClick={() => {
+                                            this.setState({ graphType: item.scaleType });
+                                            this.setState({ activeIndex: index });
+                                        }} className={this.state.activeIndex === index ? 'selected' : ''}>
+                                            {item.name}
+                                        </a>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                         <ResponsiveContainer width="100%" height="100%">
@@ -135,11 +151,11 @@ export default class Detailgraph extends Component {
                                 <Tooltip content={this.CustomTooltip} animationDuration={0} />
                                 <Area animationDuration={2500}
                                     animationEasing={"ease-in-out"} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
-                                    dataKey="Cases" stroke={color} type="natural" dot={false} travellerWidth={4} strokeWidth={3}
-                                    activeDot={{ fill: "#000000", stroke: "#FFFFFF", strokeWidth: 1, r: 5 }} fill="url(#colorUv)" />
+                                    dataKey="Cases" stroke={color} fill="url(#colorUv)" type="natural" dot={false} travellerWidth={4} strokeWidth={3}
+                                    activeDot={{ fill: "#000000", stroke: "#FFFFFF", strokeWidth: 1, r: 5 }}  />
                                 <Brush dataKey="Date" tickFormatter={this.xAxisTickFormatter} height={40} startIndex={Math.round(data.length * 0.75)} fill="rgba(54, 54, 54,0.1)" stroke="#363636">
                                     <AreaChart >
-                                        <YAxis tick={false} width={0} hide domain={["auto", "auto"]} />
+                                        <YAxis  scale={graphType}  tick={false} width={0} hide domain={["auto", "auto"]} />
                                         <Area fill="url(#colorUv)" type="natural" dataKey="Cases" stroke={color} strokeWidth={1} name="cases" dot={false} />
                                     </AreaChart>
                                 </Brush>
