@@ -36,14 +36,6 @@ export default class Detailgraph extends Component {
         };
         this.container = React.createRef();
     }
-
-    xAxisTickFormatter(timestamp_measured) {
-
-        return moment(timestamp_measured)
-            .format("ll")
-            .slice(0, 6);
-    }
-
     componentDidMount() {
         let country = this.props.clickedObject.country;
         dataType = this.props.dataType;
@@ -67,7 +59,20 @@ export default class Detailgraph extends Component {
             axios.get(`https://api.covid19api.com/total/country/${country}/status/${dataType}`)])
             .then(axios.spread((countryData) => {
                 data = countryData.data;
-                data = data.filter(item => (item.Cases !== 0));
+
+                data = data.map(function (country, index, array) {
+                    const previousValue = array[index - 1] ? array[index - 1].Cases : 0;
+                    const rate = 100 * Math.abs((country.Cases - previousValue) / ((country.Cases + previousValue) / 2));
+                    console.log(rate);
+                    return {
+                        Cases: country.Cases,
+                        rate: parseFloat(rate).toFixed(2),
+                        Date: country.Date
+                    }
+                });
+                data = data.filter(item => (item.Cases !== 0 && item.rate >= 0 && item.rate && item.rate !== "Infinity"));
+
+
                 this.setState({
                     data: data
                 });
@@ -76,14 +81,31 @@ export default class Detailgraph extends Component {
             })
     }
 
-    changeGraphType = (index, props) => {
-
-    }
-
     CustomTooltip = ({ active, payload, label }) => {
         let dateTip = moment(label)
             .format("llll")
             .slice(0, 12);
+        let formattedDate = dateTip
+        if (payload) {
+            if (active) {
+                return (
+                    <div className="custom-tooltip">
+                        <p className="label-tooltip">{`${formattedDate}`}</p>
+                        <p className="desc-tooltip">
+                            <span className="value-tooltip">{` Progression Rate: ${payload[0].value + "%"}`}</span>
+                        </p>
+                    </div>
+                );
+            }
+        }
+        return null;
+    };
+
+    CustomTooltipCases = ({ active, payload, label }) => {
+        let dateTip = moment(label)
+            .format("llll")
+            .slice(0, 12);
+
         let formattedDate = dateTip
         if (payload) {
             if (active) {
@@ -101,15 +123,24 @@ export default class Detailgraph extends Component {
     };
 
     CustomizedAxisTick = ({ x, y, payload }) => {
+        let dateTip = moment(payload.value)
+            .format("ll")
+            .slice(0, 6);
         return (
             <g transform={`translate(${x},${y})`}>
                 <text x={23} y={0} dy={14} fontSize="0.90em" fontFamily="bold" textAnchor="end" fill="#363636">
-                    {moment(payload.value)
-                        .format("ll")
-                        .slice(0, 6)}</text>
+                    {dateTip}</text>
             </g>
         );
     }
+
+    xAxisTickFormatter(timestamp_measured) {
+
+        return moment(timestamp_measured)
+            .format("ll")
+            .slice(0, 6);
+    }
+
 
     render() {
         countryName = this.state.countryName;
@@ -117,7 +148,6 @@ export default class Detailgraph extends Component {
         gradient = this.state.gradient;
         color = this.state.color;
         graphType = this.state.graphType;
-
         return (
             <div ref={e => (this.container = e)}>
                 {this.state.data ? (
@@ -137,8 +167,9 @@ export default class Detailgraph extends Component {
                                 )}
                             </ul>
                         </div>
+
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={data} margin={{ top: 5, right: 60, left: 0, bottom: 5 }}>
+                            <AreaChart data={data} margin={{ top: 5, right: 60, left: 0, bottom: 5 }} syncId="CountryId">
                                 <defs>
                                     <linearGradient id="colorUv" x1="0" y1={100} x2="0" y2="0" gradientUnits="userSpaceOnUse">
                                         {gradient.map((colors, i) => {
@@ -146,19 +177,36 @@ export default class Detailgraph extends Component {
                                         })}
                                     </linearGradient>
                                 </defs>
-                                <XAxis dataKey="Date" tickCount={10} tick={this.CustomizedAxisTick} minTickGap={10} tickSize={7} dx={14} allowDataOverflow={true} />
+                                <XAxis dataKey="Date" tickCount={10} tick={this.CustomizedAxisTick} minTickGap={2} tickSize={7} dx={14} allowDataOverflow={true} />
                                 <YAxis scale={graphType} type="number" domain={['auto', 'auto']} />
-                                <Tooltip content={this.CustomTooltip} animationDuration={0} />
+                                <Tooltip content={this.CustomTooltipCases} animationDuration={0} />
                                 <Area animationDuration={2500}
                                     animationEasing={"ease-in-out"} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
                                     dataKey="Cases" stroke={color} fill="url(#colorUv)" type="natural" dot={false} travellerWidth={4} strokeWidth={3}
-                                    activeDot={{ fill: "#000000", stroke: "#FFFFFF", strokeWidth: 1, r: 5 }}  />
-                                <Brush dataKey="Date" tickFormatter={this.xAxisTickFormatter} height={40} startIndex={Math.round(data.length * 0.75)} fill="rgba(54, 54, 54,0.1)" stroke="#363636">
+                                    activeDot={{ fill: "#000000", stroke: "#FFFFFF", strokeWidth: 1, r: 5 }} />
+                                <Brush dataKey="Date" height={40} tickFormatter={this.xAxisTickFormatter} fill="rgba(54, 54, 54,0.1)" stroke="#363636">
                                     <AreaChart >
-                                        <YAxis  scale={graphType}  tick={false} width={0} hide domain={["auto", "auto"]} />
-                                        <Area fill="url(#colorUv)" type="natural" dataKey="Cases" stroke={color} strokeWidth={1} name="cases" dot={false} />
+                                        {/* <Area fill="url(#colorUv)" type="natural" dataKey="rate" stroke={color} strokeWidth={1} name="cases" dot={false} /> */}
                                     </AreaChart>
                                 </Brush>
+                            </AreaChart>
+                        </ResponsiveContainer>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={data} margin={{ top: 5, right: 60, left: 0, bottom: 5 }} syncId="CountryId">
+                                <defs>
+                                    <linearGradient id="colorUv" x1="0" y1={100} x2="0" y2="0" gradientUnits="userSpaceOnUse">
+                                        {gradient.map((colors, i) => {
+                                            return <stop key={colors} offset={`${0 + (i * 100) / (gradient.length - 1)}%`} stopColor={colors} />;
+                                        })}
+                                    </linearGradient>
+                                </defs>
+                                <XAxis dataKey="Date" tickCount={10} tick={this.CustomizedAxisTick} minTickGap={2} tickSize={7} dx={14} allowDataOverflow={true} />
+                                <YAxis scale={graphType} type="number" domain={[0, 100]} />
+                                <Tooltip content={this.CustomTooltip} animationDuration={0} />
+                                <Area animationDuration={2500}
+                                    animationEasing={"ease-in-out"} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
+                                    dataKey="rate" stroke={color} fill="url(#colorUv)" type="natural" dot={false} travellerWidth={4} strokeWidth={3}
+                                    activeDot={{ fill: "#000000", stroke: "#FFFFFF", strokeWidth: 1, r: 5 }} />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>

@@ -69,12 +69,13 @@ export default class App extends React.Component {
   }
   componentDidMount() {
     document.title = "NCOV19UPDATE";
+
     this.fetchData();
     this.timer = setInterval(() => this.fetchData(), 5000);
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
+    clearInterval(this.time);
     this.timer = null;
   }
 
@@ -103,6 +104,8 @@ export default class App extends React.Component {
         item.province !== null && item.country !== "United Kingdom" && item.country !== "Denmark" && item.province !== "Hong Kong"));
       let WorldData = World.data || [];
       data = WorldData;
+
+
       data = data.map(function (location) {
 
         return {
@@ -136,13 +139,11 @@ export default class App extends React.Component {
       hoveredObject && (
         <div className="data-hover" style={{ left: pointerX, top: pointerY }}>
           <ul className="hoveredObjectData">
-            <li><h5 className="title is-5">{hoveredObject.city}</h5></li>
-            {hoveredObject.city !== hoveredObject.province && (
-              <li>
-                <span className="title is-4">{hoveredObject.province}</span>
-              </li>
-            )}
-            <li><h5 className="title is-5">{hoveredObject.country}</h5></li>
+            <li>
+              <h1 className="title is-4">{hoveredObject.province}</h1>
+            </li>
+            <li><h1 className="title is-5">{hoveredObject.country}</h1></li>
+            <hr />
             {dataType === "confirmed" && (
               <li className="cases">
                 <HoverPanel src="https://img.icons8.com/color/48/000000/treatment-plan.png"
