@@ -81,7 +81,7 @@ export default class App extends React.Component {
 
   fetchData() {
     axios.all([
-      axios.get('https://corona.lmao.ninja/countries'),
+      axios.get('https://corona.lmao.ninja/v2/countries'),
       axios.get('https://corona.lmao.ninja/v2/jhucsse')
     ]).then(axios.spread((World, provinces) => {
 
@@ -90,7 +90,7 @@ export default class App extends React.Component {
       provinces = provinces.map(function (province) {
         return {
           deaths: province.stats.deaths,
-          recovered: "not available",
+          recovered: province.stats.recovered ? province.stats.recovered : "Not available",
           diskResolution: 4,
           cases: province.stats.confirmed,
           province: province.province,
@@ -197,7 +197,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const elevation = scaleLinear([0, 160000], [0, 10000]);
+    const elevation = scaleLinear([0, 170000], [0, 10000]);
     const radiusColumns = 15000;
     const layers = [
       new ColumnLayer({
@@ -287,8 +287,8 @@ export default class App extends React.Component {
         radius: radiusColumns,
         offset: [3, 1],
         elevationScale: 50,
-        getFillColor: d => getColorArray(color(d.cases, [0, 55], colorScale[2])),
-        getElevation: d => elevation(d.cases),
+        getFillColor: d => getColorArray(color(d.active ? d.active : d.cases, [0, 55], colorScale[2])),
+        getElevation: d => elevation(d.active ? d.active : d.cases),
         onHover: info =>
           this.setState({
             hoveredObject: info.object,
