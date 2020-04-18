@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react'
 import { useSpring, a } from 'react-spring'
 import { useMeasure, usePrevious } from './accordion/helpers'
 import { Global, Frame, Title, Content, toggle } from './accordion/styles'
-import * as Icons from './accordion/icons'
+import * as Icons from './accordion/icons';
 
 const Tree = memo(({ children, name, style, defaultOpen = false }) => {
     const [isOpen, setOpen] = useState(defaultOpen)
@@ -27,7 +27,6 @@ const Tree = memo(({ children, name, style, defaultOpen = false }) => {
 const Legend = () => {
     return (
         <div className="legendData">
-
             <Global />
             <Tree name="NCOV19UPDATE" defaultOpen>
                 <Tree name="Legend" defaultOpen>
@@ -39,16 +38,19 @@ const Legend = () => {
                 </Tree>
                 <Tree name="Good to know" >
                     <div className="info-dataviz">
-                        <Tree name="Active Cases" >
+                        <Tree name="Active Cases">
+                            
                             <p> By removing deaths and recoveries from total cases, we get "currently infected cases" or "active cases" (cases still awaiting for an outcome).
                         </p>
                         </Tree>
                         <Tree name="Growth factor" >
-                            <p> is the factor by which a quantity multiplies itself over time. The formula used is every day's new cases / new cases on the previous day.</p>
+                            <p> Is the factor by which a quantity multiplies itself over time. The formula used is every day's new cases / new cases on the previous day.</p>
                         </Tree>
                         <Tree name="Accuracy numbers" >
                             <p>The actual number of infections with the novel coronavirus is higher than the number mentioned here.
                      This is because not everyone who may be infected is tested for the virus.</p>
+
+
                         </Tree>
                         <Tree name="Per 1m Pop" >
                             <p>The amount of people tested for every million.</p>
@@ -62,9 +64,6 @@ const Legend = () => {
                     </div>
                 </Tree>
             </Tree>
-            <div className="info-data">
-                <em>data source: <a href="https://github.com/NovelCOVID/API">NovelCOVID</a></em>
-            </div>
         </div>
     );
 }

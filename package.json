@@ -10,6 +10,7 @@
     "@deck.gl/layers": "^8.0.15",
     "axios": "^0.19.2",
     "bulma": "^0.7.5",
+    "bulma-extensions": "^6.2.7",
     "d3": "^5.15.1",
     "d3-color": "^1.2.3",
     "d3-ease": "^1.0.6",
@@ -38,8 +39,8 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "node-sass": "^4.13.1",
-    "@fortawesome/fontawesome-free": "^5.12.1"
+    "@fortawesome/fontawesome-free": "^5.12.1",
+    "node-sass": "^4.13.1"
   },
   "eslintConfig": {
     "extends": "react-app"

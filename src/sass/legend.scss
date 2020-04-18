@@ -10,52 +10,32 @@
     .legendData {
         padding-bottom: 10px;
 
-        li {
-            list-style-type: none;
-        }
-
         ul {
             li {
+                &::before {
+                    width: 23px;
+                    content: "●";
+                    font-size: 1.7em;
+                    @media not all and (min-resolution: 0.001dpcm) {
+                        width: 23px;
+                    }
+                    @-moz-document url-prefix() {
+                        width: 23px;
+                    }
+                }
                 &:nth-child(1) {
                     &:before {
-                        @media not all and (min-resolution: 0.001dpcm) {
-                            width: 23px;
-                        }
-                        @-moz-document url-prefix() {
-                            width: 23px;
-                        }
-                        content: "●";
-                        width: 23px;
                         color: #006d2c;
-                        font-size: 1.7em;
                     }
                 }
                 &:nth-child(3) {
                     &:before {
-                        @media not all and (min-resolution: 0.001dpcm) {
-                            width: 23px;
-                        }
-                        @-moz-document url-prefix() {
-                            width: 23px;
-                        }
-                        content: "●";
-                        width: 23px;
                         color: #a50f15;
-                        font-size: 1.7em;
                     }
                 }
                 &:nth-child(2) {
                     &:before {
-                        @media not all and (min-resolution: 0.001dpcm) {
-                            width: 23px;
-                        }
-                        @-moz-document url-prefix() {
-                            width: 23px;
-                        }
-                        content: "●";
-                        width: 23px;
                         color: #f39c12;
-                        font-size: 1.7em;
                     }
                 }
             }
@@ -68,17 +48,11 @@
                 li {
                     display: flex;
                     &::before {
-                        content: "●";
                         color: #000000;
                         font-size: 0.8em;
-                     
                     }
                 }
             }
         }
-    }
-
-    .info-data {
-        font-size: smaller;
     }
 }
