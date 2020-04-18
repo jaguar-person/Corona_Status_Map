@@ -10,10 +10,10 @@ class Modal extends React.Component {
     const closeModal = this.props.closeModal;
 
     return (
-      <div className="modal is-active is-clipped">
+      <div className={`modal is-active is-clipped ModalShowing-${this.props.modelState}`}>
         <div className="modal-background"></div>
         <div className="modal-content">
-          <button className="modal-close is-large" aria-label="close" onClick={event => closeModal(event)}/>
+          <button className="modal-close is-large" aria-label="close" onClick={event => closeModal(event)} />
           {this.props.children}
         </div>
       </div>

@@ -4,71 +4,55 @@
     margin: 10px;
     bottom: 20px;
     position: absolute;
-    width: 230px;
-    height: 200px;
+    width: 340px;
     padding: 10px;
 
     .legendData {
         padding-bottom: 10px;
-        li {
-            list-style-type: none;
-        }
-        p {
-            font-weight: bolder;
-        }
 
         ul {
             li {
+                &::before {
+                    width: 23px;
+                    content: "●";
+                    font-size: 1.7em;
+                    @media not all and (min-resolution: 0.001dpcm) {
+                        width: 23px;
+                    }
+                    @-moz-document url-prefix() {
+                        width: 23px;
+                    }
+                }
                 &:nth-child(1) {
                     &:before {
-                        @media not all and (min-resolution: 0.001dpcm) {
-                            width: 35px;
-                        }
-                        @-moz-document url-prefix() {
-                            width: 35px;
-                        }
-                        content: "●";
-                        display: inline-block;
-                        width: 27px;
                         color: #006d2c;
-                        font-size: 2em;
                     }
                 }
                 &:nth-child(3) {
                     &:before {
-                        @media not all and (min-resolution: 0.001dpcm) {
-                            width: 35px;
-                        }
-                        @-moz-document url-prefix() {
-                            width: 35px;
-                        }
-                        content: "●";
-                        display: inline-block;
-                        width: 25px;
                         color: #a50f15;
-                        font-size: 1.7em;
                     }
                 }
                 &:nth-child(2) {
                     &:before {
-                        @media not all and (min-resolution: 0.001dpcm) {
-                            width: 35px;
-                        }
-                        @-moz-document url-prefix() {
-                            width: 35px;
-                        }
-                        content: "●";
-                        display: inline-block;
-                        width: 25px;
                         color: #f39c12;
-                        font-size: 1.7em;
                     }
                 }
             }
         }
-    }
-
-    .info-data {
-        font-size: smaller;
+        .info-dataviz {
+            p {
+                font-size: 12px;
+            }
+            ul {
+                li {
+                    display: flex;
+                    &::before {
+                        color: #000000;
+                        font-size: 0.8em;
+                    }
+                }
+            }
+        }
     }
 }
