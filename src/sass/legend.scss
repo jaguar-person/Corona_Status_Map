@@ -4,17 +4,14 @@
     margin: 10px;
     bottom: 20px;
     position: absolute;
-    width: 230px;
-    height: 200px;
+    width: 340px;
     padding: 10px;
 
     .legendData {
         padding-bottom: 10px;
+
         li {
             list-style-type: none;
-        }
-        p {
-            font-weight: bolder;
         }
 
         ul {
@@ -22,29 +19,27 @@
                 &:nth-child(1) {
                     &:before {
                         @media not all and (min-resolution: 0.001dpcm) {
-                            width: 35px;
+                            width: 23px;
                         }
                         @-moz-document url-prefix() {
-                            width: 35px;
+                            width: 23px;
                         }
                         content: "●";
-                        display: inline-block;
-                        width: 27px;
+                        width: 23px;
                         color: #006d2c;
-                        font-size: 2em;
+                        font-size: 1.7em;
                     }
                 }
                 &:nth-child(3) {
                     &:before {
                         @media not all and (min-resolution: 0.001dpcm) {
-                            width: 35px;
+                            width: 23px;
                         }
                         @-moz-document url-prefix() {
-                            width: 35px;
+                            width: 23px;
                         }
                         content: "●";
-                        display: inline-block;
-                        width: 25px;
+                        width: 23px;
                         color: #a50f15;
                         font-size: 1.7em;
                     }
@@ -52,16 +47,31 @@
                 &:nth-child(2) {
                     &:before {
                         @media not all and (min-resolution: 0.001dpcm) {
-                            width: 35px;
+                            width: 23px;
                         }
                         @-moz-document url-prefix() {
-                            width: 35px;
+                            width: 23px;
                         }
                         content: "●";
-                        display: inline-block;
-                        width: 25px;
+                        width: 23px;
                         color: #f39c12;
                         font-size: 1.7em;
+                    }
+                }
+            }
+        }
+        .info-dataviz {
+            p {
+                font-size: 12px;
+            }
+            ul {
+                li {
+                    display: flex;
+                    &::before {
+                        content: "●";
+                        color: #000000;
+                        font-size: 0.8em;
+                     
                     }
                 }
             }

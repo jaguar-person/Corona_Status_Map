@@ -45,33 +45,41 @@ export default class Detailgraph extends Component {
             countryName: country
         });
 
-        color = (dataType === "confirmed" ? "#f39c12" : dataType === "deaths" ? "#a50f15" : "#006d2c");
+        color = (dataType === "Confirmed" ? "#f39c12" : dataType === "Deaths" ? "#a50f15" : "#006d2c");
         this.setState({
             color: color
         });
-        let scaleLinechart = (dataType === "confirmed" ? colorScaleDetail[4] : dataType === "deaths" ? colorScaleDetail[5] : colorScaleDetail[3]);
+        let scaleLinechart = (dataType === "Confirmed" ? colorScaleDetail[4] : dataType === "Deaths" ? colorScaleDetail[5] : colorScaleDetail[3]);
 
         this.setState({
             gradient: scaleLinechart
         });
 
         axios.all([
-            axios.get(`https://api.covid19api.com/total/country/${country}/status/${dataType}`)])
+            axios.get(`https://api.covid19api.com/total/country/${country}`)])
             .then(axios.spread((countryData) => {
                 data = countryData.data;
 
                 data = data.map(function (country, index, array) {
-                    const previousValue = array[index - 1] ? array[index - 1].Cases : 0;
-                    const rate = 10 * Math.abs((country.Cases - previousValue) / ((country.Cases + previousValue) / 2));
-                    const dayValue = country.Cases - previousValue;
+                    let activeCases = country.Confirmed - (country.Recovered + country.Deaths);
+                    let cases = (dataType === "Confirmed" ? activeCases : country[dataType])
+                    let previousValue;
+                    if (dataType === "Confirmed") {
+                        previousValue = array[index - 1] ? array[index - 1][dataType] - (array[index - 1].Recovered + array[index - 1].Deaths) : 0;
+                    } else {
+                        previousValue = array[index - 1] ? array[index - 1][dataType] : 0;
+                    }
+                    const rate = 10 * Math.abs((cases - previousValue) / ((cases + previousValue) / 2));
+                    const dayValue = cases - previousValue;
+                    console.log(`Current Value: ${cases} , Previous Value: ${previousValue} , Dayvalue:  ${dayValue}, ${country.Date}`)
                     return {
-                        Cases: country.Cases,
+                        Cases: cases,
                         rate: rate.toFixed(2),
                         dayValue: dayValue,
                         Date: country.Date
                     }
                 });
-                data = data.filter(item => (item.Cases !== 0 && item.rate >= 0 && item.rate  && item.dayValue > 0));
+                data = data.filter(item => (item.Cases !== 0 && item.rate !== 0 && item.rate && item.dayValue !== 0));
 
 
                 this.setState({
@@ -93,7 +101,7 @@ export default class Detailgraph extends Component {
                     <div className="custom-tooltip">
                         <p className="label-tooltip">{`${formattedDate}`}</p>
                         <p className="desc-tooltip">
-                            <span className="value-tooltip">{` Progression Rate: ${payload[0].value}%`}</span>
+                            <span className="value-tooltip">{` Growth Factor: ${payload[0].value}%`}</span>
                         </p>
                     </div>
                 );
