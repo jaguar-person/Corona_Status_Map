@@ -4,6 +4,7 @@ import { useMeasure, usePrevious } from './accordion/helpers'
 import { Global, Frame, Title, Content, toggle } from './accordion/styles'
 import * as Icons from './accordion/icons';
 
+
 const Tree = memo(({ children, name, style, defaultOpen = false }) => {
     const [isOpen, setOpen] = useState(defaultOpen)
     const previous = usePrevious(isOpen)
@@ -28,7 +29,7 @@ const Legend = () => {
     return (
         <div className="legendData">
             <Global />
-            <Tree name="NCOV19UPDATE" defaultOpen>
+            <Tree name={<span>NCOV19UPDATE</span>} defaultOpen>
                 <Tree name="Legend" defaultOpen>
                     <ul>
                         <li>Recovered</li>
@@ -39,26 +40,23 @@ const Legend = () => {
                 <Tree name="Good to know" >
                     <div className="info-dataviz">
                         <Tree name="Active Cases">
-                            
                             <p> By removing deaths and recoveries from total cases, we get "currently infected cases" or "active cases" (cases still awaiting for an outcome).
                         </p>
                         </Tree>
-                        <Tree name="Growth factor" >
+                        <Tree name="Growth factor">
                             <p> Is the factor by which a quantity multiplies itself over time. The formula used is every day's new cases / new cases on the previous day.</p>
                         </Tree>
-                        <Tree name="Accuracy numbers" >
+                        <Tree name="Accuracy numbers">
                             <p>The actual number of infections with the novel coronavirus is higher than the number mentioned here.
                      This is because not everyone who may be infected is tested for the virus.</p>
-
-
                         </Tree>
-                        <Tree name="Per 1m Pop" >
-                            <p>The amount of people tested for every million.</p>
+                        <Tree name="Per 1m Pop">
+                            <p>The amount of people tested in each country for every million.</p>
                         </Tree>
-                        <Tree name="Which datasources have been used?" >
+                        <Tree name="Which datasources have been used?">
                             <ul>
-                                <li><p>For the numbers you see on the map we have used the <a href="https://github.com/NovelCOVID/API">NovelCOVID API</a>. They get their data from <a href="https://www.worldometers.info/coronavirus/about/">worldometers.</a></p></li>
-                                <li><p>To display the historical data in the graphs we use <a href="https://documenter.getpostman.com/view/10808728/SzS8rjbc?version=latest">COVID19API</a> because their datastructuur fit our needs.</p></li>
+                                <li><p>The data that is displayed on the map uses the <a href="https://github.com/NovelCOVID/API">NovelCOVID API</a>. This api gets its data directly from <a href="https://www.worldometers.info/coronavirus/about/">Worldometers.</a></p></li>
+                                <li><p>To display the historical data of each country the<a href="https://documenter.getpostman.com/view/10808728/SzS8rjbc?version=latest">COVID19API</a> is used.</p></li>
                             </ul>
                         </Tree>
                     </div>

@@ -2,14 +2,12 @@
     background: #ffff;
     border-radius: 10px;
     margin: 10px;
-    bottom: 20px;
+    bottom: 0px;
     position: absolute;
     width: 340px;
     padding: 10px;
-
     .legendData {
         padding-bottom: 10px;
-
         ul {
             li {
                 &::before {

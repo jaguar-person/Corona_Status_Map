@@ -71,7 +71,6 @@ export default class Detailgraph extends Component {
                     }
                     const rate = 10 * Math.abs((cases - previousValue) / ((cases + previousValue) / 2));
                     const dayValue = cases - previousValue;
-                    console.log(`Current Value: ${cases} , Previous Value: ${previousValue} , Dayvalue:  ${dayValue}, ${country.Date}`)
                     return {
                         Cases: cases,
                         rate: rate.toFixed(2),
