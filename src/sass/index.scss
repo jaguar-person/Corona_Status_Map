@@ -25,7 +25,14 @@ body {
   font-family: 'Roboto Slab', cursive;
 }
 
+.mapboxgl-ctrl-logo,.mapboxgl-ctrl-bottom-right {
+  display: none !important;
+}
 
+body .mapboxgl-ctrl.mapboxgl-ctrl-group {
+  background-color: whitesmoke!important;
+  margin: 10px;
+}
 // custom imports
 @import "custom";
 @import "typography";

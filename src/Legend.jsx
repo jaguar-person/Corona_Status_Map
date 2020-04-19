@@ -29,7 +29,7 @@ const Legend = () => {
     return (
         <div className="legendData">
             <Global />
-            <Tree name="NCOV19UPDATE" defaultOpen>
+            <Tree name={<span>NCOV19UPDATE</span>} defaultOpen>
                 <Tree name="Legend" defaultOpen>
                     <ul>
                         <li>Recovered</li>

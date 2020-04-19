@@ -1,6 +1,6 @@
 import React from "react";
 import DeckGL, { ColumnLayer } from "deck.gl";
-import { StaticMap, FullscreenControl } from "react-map-gl";
+import { _MapContext as MapContext, StaticMap, FullscreenControl, NavigationControl } from 'react-map-gl';
 import Modal from "./Modal";
 import { scaleLinear } from "d3-scale";
 import Detailgraph from "./detailview/Detailgraph";
@@ -101,6 +101,7 @@ export default class App extends React.Component {
           deaths: province.stats.deaths,
           recovered: province.stats.recovered ? province.stats.recovered : "Not available",
           cases: province.stats.confirmed,
+          active: province.stats.confirmed - (province.stats.recovered + province.stats.deaths),
           province: province.province,
           country: province.country,
           coordinates: [parseFloat(province.coordinates.longitude), parseFloat(province.coordinates.latitude)]
@@ -158,10 +159,10 @@ export default class App extends React.Component {
               <li className="cases">
                 <HoverPanel src="https://img.icons8.com/color/48/000000/treatment-plan.png"
                   color={color} caseValue={hoveredObject.cases.toLocaleString()} caseType={"Total Reported Cases"} />
+                <HoverPanel src="https://img.icons8.com/color/48/000000/coronavirus.png"
+                  color={color} caseValue={hoveredObject.active.toLocaleString()} caseType={"Active Cases"} />
                 {hoveredObject.updated && (
                   <div className="extra-info">
-                    <HoverPanel src="https://img.icons8.com/color/48/000000/coronavirus.png"
-                      color={color} caseValue={hoveredObject.active.toLocaleString()} caseType={"Active Cases"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/health-book.png"
                       color={color} caseValue={hoveredObject.todayCases.toLocaleString()} caseType={"Reported Today"} />
                     <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
@@ -299,8 +300,8 @@ export default class App extends React.Component {
         radius: radiusColumns,
         offset: [3, 1],
         elevationScale: 50,
-        getFillColor: d => getColorArray(color(d.active ? d.active : d.cases, [0, 55], colorScale[2])),
-        getElevation: d => elevation(d.active ? d.active : d.cases),
+        getFillColor: d => getColorArray(color(d.active, [0, 55], colorScale[2])),
+        getElevation: d => elevation(d.active),
         onHover: info =>
           this.setState({
             hoveredObject: info.object,
@@ -318,8 +319,11 @@ export default class App extends React.Component {
     ];
     return (
       <div>
-        <DeckGL layers={layers} initialViewState={INITIAL_VIEW_STATE} controller={controlsOn} >
-          <StaticMap mapStyle={this.state.DarkMode ? "mapbox://styles/ugur222/ck962tunp224e1imwoghojsqd" : "mapbox://styles/ugur222/ck74tfdlm22dm1in0t5zxxvgq"} mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
+        <DeckGL ContextProvider={MapContext.Provider} layers={layers} initialViewState={INITIAL_VIEW_STATE} controller={controlsOn} >
+          <div style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 100 }}>
+            <NavigationControl captureScroll={true} showZoom={true} showCompass={false} />
+          </div>
+          <StaticMap mapStyle={this.state.DarkMode ? "mapbox://styles/ugur222/ck962tunp224e1imwoghojsqd" : "mapbox://styles/ugur222/ck96xgac82atn1ilajg6v8b8x"} mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
           {this.renderTooltip.bind(this)}
           {this.renderLocation.bind(this)}
           <div style={{ position: 'absolute', right: 0 }}>
