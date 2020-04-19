@@ -14,7 +14,7 @@ import { colorScale } from "./settings/colors";
 import HoverPanel from "./HoverPanel";
 
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21xZnE0cjZhbHI0In0.aCGjvePsRwkvQyNBjUEkaw";
-const mapStyle = "mapbox://styles/ugur222/ck74tfdlm22dm1in0t5zxxvgq";
+
 const INITIAL_VIEW_STATE = {
   longitude: 12.8333,
   latitude: 42.8333,
@@ -40,7 +40,9 @@ export default class App extends React.Component {
       collectionCases: [],
       render: false,
       stateName: "",
-      dataState: []
+      dataState: [],
+      DarkMode: false,
+      switchText: "DarkMode"
     };
 
     this.closeModal = this.closeModal.bind(this);
@@ -80,6 +82,12 @@ export default class App extends React.Component {
     this.timer = null;
   }
 
+  switchTheme = () => {
+    this.setState({ DarkMode: !this.state.DarkMode })
+    if (this.state.DarkMode ? this.setState({ switchText: "DarkMode" }) : this.setState({ switchText: "LightMode" }));
+  }
+
+
   fetchData() {
     axios.all([
       axios.get('https://corona.lmao.ninja/v2/countries'),
@@ -92,7 +100,6 @@ export default class App extends React.Component {
         return {
           deaths: province.stats.deaths,
           recovered: province.stats.recovered ? province.stats.recovered : "Not available",
-          diskResolution: 4,
           cases: province.stats.confirmed,
           province: province.province,
           country: province.country,
@@ -112,7 +119,6 @@ export default class App extends React.Component {
         return {
           recovered: location.recovered,
           deaths: location.deaths,
-          diskShape: 10,
           critical: location.critical,
           todayDeaths: location.todayDeaths,
           todayCases: location.todayCases,
@@ -139,12 +145,14 @@ export default class App extends React.Component {
     let { hoveredObject, pointerX, pointerY, dataType, color } = this.state || {};
     return (
       hoveredObject && (
-        <div className="data-hover" style={{ left: pointerX, top: pointerY }}>
+        <div className={`data-hover ${this.state.DarkMode ? "is-dark" : "is-light"}`} style={{
+          left: pointerX, top: pointerY
+        }} >
           <ul className="hoveredObjectData">
             <li>
-              <h1 className="title is-4">{hoveredObject.province}</h1>
+              <h1 className={`title is-4 ${this.state.DarkMode ? "is-dark" : "is-light"}`}>{hoveredObject.province}</h1>
             </li>
-            <li><h1 className="title is-5">{hoveredObject.country}</h1></li>
+            <li><h1 className={`title is-5 ${this.state.DarkMode ? "is-dark" : "is-light"}`}>{hoveredObject.country}</h1></li>
             <hr />
             {dataType === "Confirmed" && (
               <li className="cases">
@@ -308,18 +316,18 @@ export default class App extends React.Component {
           })
       })
     ];
-
     return (
       <div>
         <DeckGL layers={layers} initialViewState={INITIAL_VIEW_STATE} controller={controlsOn} >
-          <StaticMap mapStyle={mapStyle} mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
+          <StaticMap mapStyle={this.state.DarkMode ? "mapbox://styles/ugur222/ck962tunp224e1imwoghojsqd" : "mapbox://styles/ugur222/ck74tfdlm22dm1in0t5zxxvgq"} mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
           {this.renderTooltip.bind(this)}
           {this.renderLocation.bind(this)}
           <div style={{ position: 'absolute', right: 0 }}>
             <FullscreenControl container={document.querySelector('body')} />
           </div>
-          <CoronaInfo>
-            <Legend />
+          <CoronaInfo theme={this.state.DarkMode ? "is-dark" : "is-light"}>
+            <Legend style={{ background: "#363636" }} />
+            {/* <button className={`button ${!this.state.DarkMode ? "is-dark" : "is-light"}`} onClick={() => this.switchTheme()}>{this.state.switchText}</button> */}
           </CoronaInfo>
         </DeckGL>
       </div>

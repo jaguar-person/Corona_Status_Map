@@ -9,7 +9,7 @@ export default class HoverPanel extends Component {
                 </div>
                 <div className="info-detail">
                     <span style={{ color: this.props.color }}>{this.props.caseType}</span>
-                    <strong>{this.props.caseValue}</strong>
+                    <p>{this.props.caseValue}</p>
                 </div>
             </div>
         )

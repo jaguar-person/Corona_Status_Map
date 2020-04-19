@@ -9,9 +9,9 @@ class CoronaInfo extends React.Component {
 
   render() {
     return (
-      <div className="info-Corona">
+      <div className={`info-Corona ${this.props.theme}`}>
         <div className="content-panel">{this.props.children}</div>
-          
+
       </div>
     );
   }
