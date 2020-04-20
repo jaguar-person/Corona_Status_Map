@@ -3,10 +3,7 @@ import { easeBackOut } from 'd3';
 import { color, getColorArray } from "./settings/util";
 import { scaleLinear } from "d3-scale";
 import { colorScale } from "./settings/colors";
-let controlsOn = true;
 export const RenderLayers = (props) => {
-
-
 
     const elevation = scaleLinear([0, 140000], [0, 10000]);
     const radiusColumns = 12000;
@@ -15,7 +12,7 @@ export const RenderLayers = (props) => {
         new ColumnLayer({
             id: "Deaths",
             data,
-            pickable: controlsOn,
+            pickable: true,
             material: true,
             extruded: true,
             transitions: {
@@ -38,7 +35,7 @@ export const RenderLayers = (props) => {
         new ColumnLayer({
             id: "Recovered",
             data,
-            pickable: controlsOn,
+            pickable: true,
             extruded: true,
             transitions: {
                 getElevation: {
@@ -60,7 +57,7 @@ export const RenderLayers = (props) => {
         new ColumnLayer({
             id: "Confirmed",
             data,
-            pickable: controlsOn,
+            pickable: true,
             extruded: true,
             transitions: {
                 getElevation: {

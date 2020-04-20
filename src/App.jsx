@@ -162,7 +162,6 @@ export default class App extends React.Component {
             left: hover.x, top: hover.y
           }} >
             <ul className="hoveredObjectData">
-
               <li>
                 <h1 className={`title is-4 ${this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.province}</h1>
               </li>
