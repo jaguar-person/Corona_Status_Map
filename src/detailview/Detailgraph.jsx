@@ -19,7 +19,7 @@ export const buttons = [
     },
 ]
 
-let countryName, dataType, data, color, gradient, graphType;
+let countryName, dataType, data, color, gradient, graphType, maxDayValue, minDayValue;
 
 export default class Detailgraph extends Component {
 
@@ -80,7 +80,9 @@ export default class Detailgraph extends Component {
                 });
                 data = data.filter(item => (item.Cases !== 0 && item.rate !== 0 && item.rate && item.dayValue !== 0));
 
-
+                const amount = data.map((a) => a.dayValue);
+                maxDayValue = Math.max(...amount);
+                minDayValue = Math.min(...amount);
                 this.setState({
                     data: data
                 });
@@ -229,7 +231,7 @@ export default class Detailgraph extends Component {
                                     </linearGradient>
                                 </defs>
                                 <XAxis dataKey="Date" tickCount={10} tick={this.CustomizedAxisTick} minTickGap={2} tickSize={7} dx={14} allowDataOverflow={true} />
-                                <YAxis scale={graphType} type="number" domain={['auto', 'auto']} />
+                                <YAxis scale={graphType} type="number" domain={[minDayValue, maxDayValue]} />
                                 <Tooltip content={this.CustomTooltipCasesDaily} animationDuration={0} />
                                 <Bar animationDuration={2500}
                                     animationEasing={"ease-in-out"} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}

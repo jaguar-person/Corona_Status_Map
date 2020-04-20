@@ -18,9 +18,9 @@ const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21x
 const INITIAL_VIEW_STATE = {
   longitude: 12.8333,
   latitude: 42.8333,
-  zoom: 4.5,
+  zoom: 3.5,
   maxZoom: 16,
-  minZoom: 4.5,
+  minZoom: 3.5,
   pitch: 60,
   bearing: 5
 };
@@ -62,12 +62,14 @@ export default class App extends React.Component {
   renderLocation() {
     const { clickedObject, dataType } = this.state || {};
     if (clickedObject != null) {
-      controlsOn = false;
-      return (
-        <Modal closeModal={this.closeModal} modelState={"true"}>
-          <Detailgraph clickedObject={clickedObject} dataType={dataType} />
-        </Modal>
-      );
+      if (clickedObject.clickable) {
+        controlsOn = false;
+        return (
+          <Modal closeModal={this.closeModal} modelState={"true"}>
+            <Detailgraph clickedObject={clickedObject} dataType={dataType} />
+          </Modal>
+        );
+      }
     }
   }
   componentDidMount() {
@@ -101,6 +103,7 @@ export default class App extends React.Component {
           deaths: province.stats.deaths,
           recovered: province.stats.recovered ? province.stats.recovered : "Not available",
           cases: province.stats.confirmed,
+          clickable: false,
           active: province.stats.confirmed - (province.stats.recovered + province.stats.deaths),
           province: province.province,
           country: province.country,
@@ -110,7 +113,7 @@ export default class App extends React.Component {
 
 
       provinces = provinces.filter(item => (item.country !== "Netherlands" && item.country !== "France" &&
-        item.province !== null && item.country !== "United Kingdom" && item.country !== "Denmark" && item.province !== "Hong Kong"));
+        item.province !== null && item.country !== "United Kingdom" && item.country !== "Denmark" && item.province !== "Hong Kong" && item.province !== "Recovered" && item.province !== "Grand Princess"));
       let WorldData = World.data || [];
       data = WorldData;
 
@@ -123,6 +126,7 @@ export default class App extends React.Component {
           critical: location.critical,
           todayDeaths: location.todayDeaths,
           todayCases: location.todayCases,
+          clickable: true,
           cases: location.cases,
           active: location.active,
           tests: location.tests,
@@ -210,7 +214,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const elevation = scaleLinear([0, 170000], [0, 10000]);
+    const elevation = scaleLinear([0, 140000], [0, 10000]);
     const radiusColumns = 12000;
     const layers = [
       new ColumnLayer({

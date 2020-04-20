@@ -21,7 +21,18 @@ $break-large: 1024px;
 $break-medium: 1023px;
 $break-smaller: 800px;
 
-body {
+
+
+body,html,#root {
+background: rgba(117,207,240,1)!important;
+background: -moz-linear-gradient(top, rgba(117,207,240,1) 0%, rgba(117,207,240,1) 41%, rgba(243,239,233,1) 49%, rgba(243,239,233,1) 100%)!important;
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(117,207,240,1)), color-stop(41%, rgba(117,207,240,1)), color-stop(49%, rgba(243,239,233,1)), color-stop(100%, rgba(243,239,233,1)))!important;
+background: -webkit-linear-gradient(top, rgba(117,207,240,1) 0%, rgba(117,207,240,1) 41%, rgba(243,239,233,1) 49%, rgba(243,239,233,1) 100%)!important;
+background: -o-linear-gradient(top, rgba(117,207,240,1) 0%, rgba(117,207,240,1) 41%, rgba(243,239,233,1) 49%, rgba(243,239,233,1) 100%)!important;
+background: -ms-linear-gradient(top, rgba(117,207,240,1) 0%, rgba(117,207,240,1) 41%, rgba(243,239,233,1) 49%, rgba(243,239,233,1) 100%)!important;
+background: linear-gradient(to bottom, rgba(117,207,240,1) 0%, rgba(117,207,240,1) 41%, rgba(243,239,233,1) 49%, rgba(243,239,233,1) 100%)!important;
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#75cff0', endColorstr='#f3efe9', GradientType=0 )!important;
+
   font-family: 'Roboto Slab', cursive;
 }
 
