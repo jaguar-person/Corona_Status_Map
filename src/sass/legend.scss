@@ -6,19 +6,24 @@
     position: absolute;
     width: 340px;
     padding: 10px;
+    box-shadow: 0 0 3px 0 #000;
+
+    a {
+        cursor: pointer;
+    }
     .legendData {
         padding-bottom: 10px;
         ul {
             li {
                 &::before {
-                    width: 23px;
+                    width: 10px;
                     content: "●";
                     font-size: 1.7em;
                     @media not all and (min-resolution: 0.001dpcm) {
-                        width: 23px;
+                        width: 10px;
                     }
                     @-moz-document url-prefix() {
-                        width: 23px;
+                        width: 10px;
                     }
                 }
                 &:nth-child(1) {

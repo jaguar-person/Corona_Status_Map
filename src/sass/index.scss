@@ -21,7 +21,11 @@ $break-large: 1024px;
 $break-medium: 1023px;
 $break-smaller: 800px;
 
-body {
+
+
+body,html,#root {
+
+
   font-family: 'Roboto Slab', cursive;
 }
 

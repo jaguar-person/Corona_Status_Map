@@ -55,8 +55,9 @@ const Legend = () => {
                         </Tree>
                         <Tree name="Which datasources have been used?">
                             <ul>
-                                <li><p>The data that is displayed on the map uses the <a href="https://github.com/NovelCOVID/API">NovelCOVID API</a>. This api gets its data directly from <a href="https://www.worldometers.info/coronavirus/about/">Worldometers.</a></p></li>
-                                <li><p>To display the historical data of each country the<a href="https://documenter.getpostman.com/view/10808728/SzS8rjbc?version=latest">COVID19API</a> is used.</p></li>
+                                <li><p>The data that is displayed on the map uses the <a href="https://github.com/NovelCOVID/API">NovelCOVID API</a>. This api gets its data directly from 
+                                <a href="https://www.worldometers.info/coronavirus/about/">Worldometers.</a></p></li>
+                                <li><p>To display the historical data of each country the <a href="https://documenter.getpostman.com/view/10808728/SzS8rjbc?version=latest">COVID19API</a> is used.</p></li>
                             </ul>
                         </Tree>
                     </div>
