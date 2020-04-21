@@ -9,7 +9,7 @@ import moment from "moment";
 import axios from "axios";
 import { RenderLayers } from "./deckgl-layers";
 import HoverPanel from "./HoverPanel";
-import {config} from "./settings/apiSettings";
+import { config } from "./settings/apiSettings";
 
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21xZnE0cjZhbHI0In0.aCGjvePsRwkvQyNBjUEkaw";
 
@@ -116,7 +116,7 @@ export default class App extends React.Component {
           todayCases: provinces.newlyConfirmedCases,
           todayRecovered: provinces.newlyRecoveredCases,
           clickable: true,
-          isoCode:provinces.location.isoCode,
+          isoCode: provinces.location.isoCode,
           cases: provinces.totalConfirmedCases,
           active: active,
           country: provinces.location.countryOrRegion,
@@ -250,11 +250,11 @@ export default class App extends React.Component {
           <div style={{ position: 'absolute', right: 0 }}>
             <FullscreenControl container={document.querySelector('body')} />
           </div>
-          <CoronaInfo theme={this.state.DarkMode ? "is-dark" : "is-light"}>
-            <Legend style={{ background: "#363636" }} />
-            {/* <button className={`button ${!this.state.DarkMode ? "is-dark" : "is-light"}`} onClick={() => this.switchTheme()}>{this.state.switchText}</button> */}
-          </CoronaInfo>
         </DeckGL>
+        <CoronaInfo theme={this.state.DarkMode ? "is-dark" : "is-light"}>
+          <Legend style={{ background: "#363636" }} />
+          {/* <button className={`button ${!this.state.DarkMode ? "is-dark" : "is-light"}`} onClick={() => this.switchTheme()}>{this.state.switchText}</button> */}
+        </CoronaInfo>
       </div>
     );
   }
