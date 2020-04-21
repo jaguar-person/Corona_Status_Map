@@ -9,13 +9,14 @@ import moment from "moment";
 import axios from "axios";
 import { RenderLayers } from "./deckgl-layers";
 import HoverPanel from "./HoverPanel";
+import {config} from "./settings/apiSettings";
 
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21xZnE0cjZhbHI0In0.aCGjvePsRwkvQyNBjUEkaw";
 
 const INITIAL_VIEW_STATE = {
   longitude: 12.8333,
   latitude: 42.8333,
-  zoom: 3.5,
+  zoom: 3,
   maxZoom: 16,
   minZoom: 2,
   pitch: 60,
@@ -87,30 +88,43 @@ export default class App extends React.Component {
 
 
   fetchData() {
+
     axios.all([
       axios.get('https://corona.lmao.ninja/v2/countries'),
-      axios.get('https://corona.lmao.ninja/v2/jhucsse'),
-    ]).then(axios.spread((World, provinces) => {
+      axios.get('https://api.smartable.ai/coronavirus/stats/CA', config),
+      axios.get('https://api.smartable.ai/coronavirus/stats/US', config),
+      axios.get('https://api.smartable.ai/coronavirus/stats/CN', config),
+    ]).then(axios.spread((World, canada, USstates, china) => {
+      let statesData = USstates.data.stats.breakdowns || [];
+      USstates = statesData;
 
-      let provinceData = provinces.data || [];
-      provinces = provinceData;
-      provinces = provinces.map(function (province) {
-        let active = province.stats.confirmed - (province.stats.recovered + province.stats.deaths);
+      let canadaData = canada.data.stats.breakdowns || [];
+      canada = canadaData;
+
+      let chinaData = china.data.stats.breakdowns || [];
+      china = chinaData;
+
+      let provinces = USstates.concat(canada, china);
+
+      provinces = provinces.map(function (provinces) {
+        let active = provinces.totalConfirmedCases - (provinces.totalRecoveredCases + provinces.totalDeaths)
+        active = (active < 0 ? 0 : active);
         return {
-          deaths: province.stats.deaths,
-          recovered: province.stats.recovered ? province.stats.recovered : "Not available",
-          cases: province.stats.confirmed,
-          clickable: false,
+          recovered: provinces.totalRecoveredCases,
+          deaths: provinces.totalDeaths,
+          todayDeaths: provinces.newDeaths,
+          todayCases: provinces.newlyConfirmedCases,
+          todayRecovered: provinces.newlyRecoveredCases,
+          clickable: true,
+          isoCode:provinces.location.isoCode,
+          cases: provinces.totalConfirmedCases,
           active: active,
-          province: province.province,
-          country: province.country,
-          coordinates: [parseFloat(province.coordinates.longitude), parseFloat(province.coordinates.latitude)]
+          country: provinces.location.countryOrRegion,
+          province: provinces.location.provinceOrState,
+          coordinates: [provinces.location.long, provinces.location.lat]
         };
       });
 
-
-      provinces = provinces.filter(item => (item.country !== "Netherlands" && item.country !== "France" &&
-        item.province !== null && item.country !== "United Kingdom" && item.country !== "Denmark" && item.province !== "Hong Kong" && item.province !== "Recovered" && item.province !== "Grand Princess"));
       let WorldData = World.data || [];
       data = WorldData;
 
@@ -135,6 +149,7 @@ export default class App extends React.Component {
       });
 
       data = data.concat(provinces);
+
 
 
       this.setState({ data: data });
@@ -165,7 +180,9 @@ export default class App extends React.Component {
               <li>
                 <h1 className={`title is-4 ${this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.province}</h1>
               </li>
-              <li><h1 className={`title is-5 ${this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.country}</h1></li>
+              {!hover.hoveredObject.province && (
+                <li><h1 className={`title is-5 ${this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.country}</h1></li>
+              )}
               <hr />
               {hover.layer.props.id === "Confirmed" && (
                 <li className="cases">
@@ -173,10 +190,10 @@ export default class App extends React.Component {
                     color="#f39c12" caseValue={hover.hoveredObject.cases.toLocaleString()} caseType={"Total Reported Cases"} />
                   <HoverPanel src="https://img.icons8.com/color/48/000000/coronavirus.png"
                     color="#f39c12" caseValue={hover.hoveredObject.active.toLocaleString()} caseType={"Active Cases"} />
+                  <HoverPanel src="https://img.icons8.com/color/48/000000/health-book.png"
+                    color="#f39c12" caseValue={hover.hoveredObject.todayCases.toLocaleString()} caseType={"Reported Today"} />
                   {hover.hoveredObject.updated && (
                     <div className="extra-info">
-                      <HoverPanel src="https://img.icons8.com/color/48/000000/health-book.png"
-                        color="#f39c12" caseValue={hover.hoveredObject.todayCases.toLocaleString()} caseType={"Reported Today"} />
                       <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
                         color="grey" caseValue={hover.hoveredObject.updated} caseType={"Last updated"} />
                     </div>
@@ -187,10 +204,10 @@ export default class App extends React.Component {
                 <li className="cases">
                   <HoverPanel src="https://img.icons8.com/color/48/000000/die-in-bed.png"
                     color="#a50f15" caseValue={hover.hoveredObject.deaths.toLocaleString()} caseType={"Total Reported Deaths"} />
+                  <HoverPanel src="https://img.icons8.com/color/48/000000/death.png"
+                    color="#a50f15" caseValue={hover.hoveredObject.todayDeaths.toLocaleString()} caseType={"Reported Today"} />
                   {hover.hoveredObject.updated && (
                     <div className="extra-info">
-                      <HoverPanel src="https://img.icons8.com/color/48/000000/death.png"
-                        color="#a50f15" caseValue={hover.hoveredObject.todayDeaths.toLocaleString()} caseType={"Reported Today"} />
                       <HoverPanel src="https://img.icons8.com/color/48/000000/hospital-room--v2.png"
                         color="#a50f15" caseValue={hover.hoveredObject.critical.toLocaleString()} caseType={"Critical Condition"} />
                       <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
@@ -202,7 +219,13 @@ export default class App extends React.Component {
               {hover.layer.props.id === "Recovered" && (
                 <li className="cases">
                   <HoverPanel src="https://img.icons8.com/color/48/000000/recovery.png"
-                    color="#006d2c" caseValue={hover.hoveredObject.recovered.toLocaleString()} caseType={"Reported Recoveries"} />
+                    color="#006d2c" caseValue={hover.hoveredObject.recovered.toLocaleString()} caseType={"Total Reported Recoveries"} />
+                  {hover.hoveredObject.province && (
+                    <div>
+                      <HoverPanel src="https://img.icons8.com/color/48/000000/health-checkup.png"
+                        color="#006d2c" caseValue={hover.hoveredObject.todayRecovered.toLocaleString()} caseType={"Reported Today"} />
+                    </div>
+                  )}
                   {hover.hoveredObject.updated && (
                     <div className="extra-info">
                       <HoverPanel src="https://img.icons8.com/color/48/000000/medical-thermometer.png"
