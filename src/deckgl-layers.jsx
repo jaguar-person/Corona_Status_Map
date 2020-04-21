@@ -6,7 +6,7 @@ import { colorScale } from "./settings/colors";
 export const RenderLayers = (props) => {
 
     const elevation = scaleLinear([0, 140000], [0, 10000]);
-    const radiusColumns = 12000;
+    const radiusColumns = 15000;
     const { data, onHover, onClick } = props;
     return [
         new ColumnLayer({
