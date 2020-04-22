@@ -110,7 +110,7 @@ export default class App extends React.Component {
         let active = provinces.totalConfirmedCases - (provinces.totalRecoveredCases + provinces.totalDeaths)
         active = (active < 0 ? 0 : active);
         return {
-          recovered: provinces.totalRecoveredCases,
+          recovered: provinces.totalRecoveredCases ? provinces.totalRecoveredCases : "N/A",
           deaths: provinces.totalDeaths,
           todayDeaths: provinces.newDeaths,
           todayCases: provinces.newlyConfirmedCases,
@@ -132,7 +132,7 @@ export default class App extends React.Component {
       data = data.map(function (location) {
 
         return {
-          recovered: location.recovered,
+          recovered: location.recovered ? location.recovered : "N/A",
           deaths: location.deaths,
           critical: location.critical,
           todayDeaths: location.todayDeaths,
@@ -221,10 +221,8 @@ export default class App extends React.Component {
                   <HoverPanel src="https://img.icons8.com/color/48/000000/recovery.png"
                     color="#006d2c" caseValue={hover.hoveredObject.recovered.toLocaleString()} caseType={"Total Reported Recoveries"} />
                   {hover.hoveredObject.province && (
-                    <div>
-                      <HoverPanel src="https://img.icons8.com/color/48/000000/health-checkup.png"
-                        color="#006d2c" caseValue={hover.hoveredObject.todayRecovered.toLocaleString()} caseType={"Reported Today"} />
-                    </div>
+                    <HoverPanel src="https://img.icons8.com/color/48/000000/health-checkup.png"
+                      color="#006d2c" caseValue={hover.hoveredObject.todayRecovered.toLocaleString()} caseType={"Reported Today"} />
                   )}
                   {hover.hoveredObject.updated && (
                     <div className="extra-info">

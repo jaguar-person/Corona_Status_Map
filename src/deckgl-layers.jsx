@@ -17,7 +17,7 @@ export const RenderLayers = (props) => {
             extruded: true,
             transitions: {
                 getElevation: {
-                    duration: 1000,
+                    duration: 800,
                     easing: easeBackOut,
                     enter: value => [60]
                 },
@@ -39,7 +39,7 @@ export const RenderLayers = (props) => {
             extruded: true,
             transitions: {
                 getElevation: {
-                    duration: 2000,
+                    duration: 1000,
                     easing: easeBackOut,
                     enter: value => [40]
                 },
@@ -61,7 +61,7 @@ export const RenderLayers = (props) => {
             extruded: true,
             transitions: {
                 getElevation: {
-                    duration: 3000,
+                    duration: 1200,
                     easing: easeBackOut,
                     enter: value => [20]
                 },
