@@ -5,7 +5,7 @@ This platform uses react-map-gl and deck.gl to render Mapbox maps with different
 
  [Live demo](https://ncov19update.com)
 
-![Example Image of the webapp](https://i.imgur.com/6E7YtOU.png)
+![Example Image of the webapp](https://i.imgur.com/zSO44A8.png)
 
 This application was build using the following tools:
 - [Mapbox-GL](https://github.com/mapbox/mapbox-gl-js)

@@ -9,7 +9,7 @@ import moment from "moment";
 import axios from "axios";
 import { RenderLayers } from "./deckgl-layers";
 import HoverPanel from "./HoverPanel";
-import {config} from "./settings/apiSettings";
+import { config } from "./settings/apiSettings";
 
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21xZnE0cjZhbHI0In0.aCGjvePsRwkvQyNBjUEkaw";
 
@@ -110,13 +110,13 @@ export default class App extends React.Component {
         let active = provinces.totalConfirmedCases - (provinces.totalRecoveredCases + provinces.totalDeaths)
         active = (active < 0 ? 0 : active);
         return {
-          recovered: provinces.totalRecoveredCases,
+          recovered: provinces.totalRecoveredCases ? provinces.totalRecoveredCases : "N/A",
           deaths: provinces.totalDeaths,
           todayDeaths: provinces.newDeaths,
           todayCases: provinces.newlyConfirmedCases,
           todayRecovered: provinces.newlyRecoveredCases,
           clickable: true,
-          isoCode:provinces.location.isoCode,
+          isoCode: provinces.location.isoCode,
           cases: provinces.totalConfirmedCases,
           active: active,
           country: provinces.location.countryOrRegion,
@@ -132,7 +132,7 @@ export default class App extends React.Component {
       data = data.map(function (location) {
 
         return {
-          recovered: location.recovered,
+          recovered: location.recovered ? location.recovered : "N/A",
           deaths: location.deaths,
           critical: location.critical,
           todayDeaths: location.todayDeaths,
@@ -221,10 +221,8 @@ export default class App extends React.Component {
                   <HoverPanel src="https://img.icons8.com/color/48/000000/recovery.png"
                     color="#006d2c" caseValue={hover.hoveredObject.recovered.toLocaleString()} caseType={"Total Reported Recoveries"} />
                   {hover.hoveredObject.province && (
-                    <div>
-                      <HoverPanel src="https://img.icons8.com/color/48/000000/health-checkup.png"
-                        color="#006d2c" caseValue={hover.hoveredObject.todayRecovered.toLocaleString()} caseType={"Reported Today"} />
-                    </div>
+                    <HoverPanel src="https://img.icons8.com/color/48/000000/health-checkup.png"
+                      color="#006d2c" caseValue={hover.hoveredObject.todayRecovered.toLocaleString()} caseType={"Reported Today"} />
                   )}
                   {hover.hoveredObject.updated && (
                     <div className="extra-info">
@@ -250,11 +248,11 @@ export default class App extends React.Component {
           <div style={{ position: 'absolute', right: 0 }}>
             <FullscreenControl container={document.querySelector('body')} />
           </div>
-          <CoronaInfo theme={this.state.DarkMode ? "is-dark" : "is-light"}>
-            <Legend style={{ background: "#363636" }} />
-            {/* <button className={`button ${!this.state.DarkMode ? "is-dark" : "is-light"}`} onClick={() => this.switchTheme()}>{this.state.switchText}</button> */}
-          </CoronaInfo>
         </DeckGL>
+        <CoronaInfo theme={this.state.DarkMode ? "is-dark" : "is-light"}>
+          <Legend style={{ background: "#363636" }} />
+          {/* <button className={`button ${!this.state.DarkMode ? "is-dark" : "is-light"}`} onClick={() => this.switchTheme()}>{this.state.switchText}</button> */}
+        </CoronaInfo>
       </div>
     );
   }

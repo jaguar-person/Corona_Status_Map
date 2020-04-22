@@ -37,6 +37,10 @@ const Global = createGlobalStyle`
     user-select: none;
     cursor: default;
   }
+  p {
+    user-select: text;
+    cursor:text;
+  }
   #root {
     padding: 30px;
   }
