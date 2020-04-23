@@ -51,7 +51,6 @@ export default class Detailgraph extends Component {
         let activeCases = location[ConfirmedType] - (location[recoveredType] + location[deathType]);
 
         cases = (dataType === ConfirmedType ? activeCases : location[dataType])
-        console.log(cases);
         if (dataType === ConfirmedType) {
             previousValue = array[index - 1] ? array[index - 1][dataType] - (array[index - 1][recoveredType] + array[index - 1][deathType]) : 0;
         } else {
