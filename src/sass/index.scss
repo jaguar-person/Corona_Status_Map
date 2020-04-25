@@ -24,7 +24,14 @@ $break-smaller: 800px;
 
 
 body,html,#root {
-
+  background: #242424!important;
+  background: -moz-linear-gradient(top, #242424 0%, #242424 41%, #2e2e2e 49%, #2e2e2e 100%)!important;
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, #242424), color-stop(41%, #242424), color-stop(49%, #2e2e2e), color-stop(100%, #2e2e2e))!important;
+  background: -webkit-linear-gradient(top, #242424 0%, #242424 41%, #2e2e2e 49%, #2e2e2e 100%)!important;
+  background: -o-linear-gradient(top, #242424 0%, #242424 41%, #2e2e2e 49%, #2e2e2e 100%)!important;
+  background: -ms-linear-gradient(top, #242424 0%, #242424 41%, #2e2e2e 49%, #2e2e2e 100%)!important;
+  background: linear-gradient(to bottom, #242424 0%, #242424 41%, #2e2e2e 49%, #2e2e2e 100%)!important;
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#75cff0', endColorstr='#f3efe9', GradientType=0 )!important;
 
   font-family: 'Roboto Slab', cursive;
 }

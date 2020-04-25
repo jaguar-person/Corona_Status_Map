@@ -16,7 +16,7 @@ const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21x
 const INITIAL_VIEW_STATE = {
   longitude: 12.8333,
   latitude: 42.8333,
-  zoom: 3,
+  zoom: 2,
   maxZoom: 16,
   minZoom: 2,
   pitch: 60,
@@ -156,11 +156,13 @@ export default class App extends React.Component {
     })).catch((error) => {
       console.log(error); return [];
     })
-    data = this.state.data;
+  
   }
 
   render() {
-    const { hover, click } = this.state;
+    const { hover, click,data } = this.state;
+  
+ 
     return (
       <div>
         {click.clickedObject && (
@@ -173,15 +175,15 @@ export default class App extends React.Component {
           </div>
         )}
         {hover.hoveredObject && (
-          <div className={`data-hover ${this.state.DarkMode ? "is-dark" : "is-light"}`} style={{
+          <div className={`data-hover ${!this.state.DarkMode ? "is-dark" : "is-light"}`} style={{
             left: hover.x, top: hover.y
           }} >
             <ul className="hoveredObjectData">
               <li>
-                <h1 className={`title is-4 ${this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.province}</h1>
+                <h1 className={`title is-4 ${!this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.province}</h1>
               </li>
               {!hover.hoveredObject.province && (
-                <li><h1 className={`title is-5 ${this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.country}</h1></li>
+                <li><h1 className={`title is-5 ${!this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.country}</h1></li>
               )}
               <hr />
               {hover.layer.props.id === "Confirmed" && (
@@ -244,7 +246,7 @@ export default class App extends React.Component {
           <div style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 100 }}>
             <NavigationControl captureScroll={true} showZoom={true} showCompass={false} />
           </div>
-          <StaticMap mapStyle={this.state.DarkMode ? "mapbox://styles/ugur222/ck962tunp224e1imwoghojsqd" : "mapbox://styles/ugur222/ck96xgac82atn1ilajg6v8b8x"} mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
+          <StaticMap mapStyle={this.state.DarkMode ? "mapbox://styles/ugur222/ck962tunp224e1imwoghojsqd" : "mapbox://styles/ugur222/ck962tunp224e1imwoghojsqd"} mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
           <div style={{ position: 'absolute', right: 0 }}>
             <FullscreenControl container={document.querySelector('body')} />
           </div>

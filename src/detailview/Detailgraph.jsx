@@ -51,7 +51,6 @@ export default class Detailgraph extends Component {
         let activeCases = location[ConfirmedType] - (location[recoveredType] + location[deathType]);
 
         cases = (dataType === ConfirmedType ? activeCases : location[dataType])
-        console.log(cases);
         if (dataType === ConfirmedType) {
             previousValue = array[index - 1] ? array[index - 1][dataType] - (array[index - 1][recoveredType] + array[index - 1][deathType]) : 0;
         } else {
@@ -101,7 +100,6 @@ export default class Detailgraph extends Component {
                     }, this);
                 } else {
                     data = location.data.stats.history;
-
                     data = data.map(function (province, index, array) {
                         dataType = dataType.charAt(0).toLowerCase() + dataType.slice(1);
                         this.getYesterday(array, index, dataType, province, "confirmed", "recovered", "deaths");
@@ -115,7 +113,7 @@ export default class Detailgraph extends Component {
                     }, this);
 
                 }
-                data = data.filter(item => (item.Cases !== 0 && item.rate !== 0 && item.rate && item.dayValue !== 0));
+                data = data.filter(item => (item.Cases !== 0 && item.rate !== 0 && item.rate && item.dayValue > 0));
                 const amount = data.map((a) => a.dayValue);
                 maxDayValue = Math.max(...amount);
                 minDayValue = Math.min(...amount);

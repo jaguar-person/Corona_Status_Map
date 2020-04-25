@@ -4,10 +4,15 @@ import { color, getColorArray } from "./settings/util";
 import { scaleLinear } from "d3-scale";
 import { colorScale } from "./settings/colors";
 export const RenderLayers = (props) => {
+    let maxActive, minActive;
 
-    const elevation = scaleLinear([0, 140000], [0, 10000]);
-    const radiusColumns = 15000;
+    const radiusColumns = 20000;
     const { data, onHover, onClick } = props;
+    const amount = data.map((a) => a.active);
+    maxActive = Math.max(...amount);
+    minActive = Math.min(...amount);
+
+    const elevation = scaleLinear([minActive, maxActive], [0, 70000]);
     return [
         new ColumnLayer({
             id: "Deaths",
