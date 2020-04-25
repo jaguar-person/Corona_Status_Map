@@ -175,15 +175,15 @@ export default class App extends React.Component {
           </div>
         )}
         {hover.hoveredObject && (
-          <div className={`data-hover ${this.state.DarkMode ? "is-dark" : "is-light"}`} style={{
+          <div className={`data-hover ${!this.state.DarkMode ? "is-dark" : "is-light"}`} style={{
             left: hover.x, top: hover.y
           }} >
             <ul className="hoveredObjectData">
               <li>
-                <h1 className={`title is-4 ${this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.province}</h1>
+                <h1 className={`title is-4 ${!this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.province}</h1>
               </li>
               {!hover.hoveredObject.province && (
-                <li><h1 className={`title is-5 ${this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.country}</h1></li>
+                <li><h1 className={`title is-5 ${!this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.country}</h1></li>
               )}
               <hr />
               {hover.layer.props.id === "Confirmed" && (
