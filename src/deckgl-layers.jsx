@@ -60,7 +60,7 @@ export const RenderLayers = (props) => {
             onClick
         }),
         new ColumnLayer({
-            id: "Confirmed",
+            id: "Active",
             data,
             pickable: true,
             extruded: true,
