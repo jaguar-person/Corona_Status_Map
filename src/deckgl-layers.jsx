@@ -6,7 +6,7 @@ import { colorScale } from "./settings/colors";
 export const RenderLayers = (props) => {
     let maxActive, minActive;
 
-    const radiusColumns = 20000;
+    const radiusColumns = 15000;
     const { data, onHover, onClick } = props;
     const amount = data.map((a) => a.active);
     maxActive = Math.max(...amount);
@@ -60,7 +60,7 @@ export const RenderLayers = (props) => {
             onClick
         }),
         new ColumnLayer({
-            id: "Confirmed",
+            id: "Active",
             data,
             pickable: true,
             extruded: true,

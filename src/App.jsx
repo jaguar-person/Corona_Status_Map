@@ -12,7 +12,7 @@ import HoverPanel from "./HoverPanel";
 import { config } from "./settings/apiSettings";
 
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidWd1cjIyMiIsImEiOiJjazZvOXVibW8wMHR3M21xZnE0cjZhbHI0In0.aCGjvePsRwkvQyNBjUEkaw";
-
+const mapStyle = "mapbox://styles/ugur222/ck962tunp224e1imwoghojsqd";
 const INITIAL_VIEW_STATE = {
   longitude: 12.8333,
   latitude: 42.8333,
@@ -46,12 +46,9 @@ export default class App extends React.Component {
         hoveredObject: null
       }
     };
-
-    this.closeModal = this.closeModal.bind(this);
-
   }
 
-  closeModal() {
+  closeModal = () => {
     this.setState({
       click: {
         clickedObject: null
@@ -88,13 +85,13 @@ export default class App extends React.Component {
 
 
   fetchData() {
-
     axios.all([
       axios.get('https://corona.lmao.ninja/v2/countries'),
       axios.get('https://api.smartable.ai/coronavirus/stats/CA', config),
       axios.get('https://api.smartable.ai/coronavirus/stats/US', config),
       axios.get('https://api.smartable.ai/coronavirus/stats/CN', config),
     ]).then(axios.spread((World, canada, USstates, china) => {
+      
       let statesData = USstates.data.stats.breakdowns || [];
       USstates = statesData;
 
@@ -130,7 +127,7 @@ export default class App extends React.Component {
 
 
       data = data.map(function (location) {
-
+        let Testpermilion = location.testsPerOneMillion / 1000000 * 100
         return {
           recovered: location.recovered ? location.recovered : "N/A",
           deaths: location.deaths,
@@ -141,7 +138,7 @@ export default class App extends React.Component {
           cases: location.cases,
           active: location.active,
           tests: location.tests,
-          testsPerOneMillion: location.testsPerOneMillion,
+          testsPerOneMillion: `${parseFloat(Testpermilion).toFixed(2)}%`,
           country: location.country,
           updated: moment(location.updated).fromNow(),
           coordinates: [location.countryInfo.long, location.countryInfo.lat]
@@ -156,13 +153,12 @@ export default class App extends React.Component {
     })).catch((error) => {
       console.log(error); return [];
     })
-  
+
   }
 
   render() {
-    const { hover, click,data } = this.state;
-  
- 
+    const { hover, click, data } = this.state;
+
     return (
       <div>
         {click.clickedObject && (
@@ -186,7 +182,7 @@ export default class App extends React.Component {
                 <li><h1 className={`title is-5 ${!this.state.DarkMode ? "is-dark" : "is-light"}`}>{hover.hoveredObject.country}</h1></li>
               )}
               <hr />
-              {hover.layer.props.id === "Confirmed" && (
+              {hover.layer.props.id === "Active" && (
                 <li className="cases">
                   <HoverPanel src="https://img.icons8.com/color/48/000000/treatment-plan.png"
                     color="#f39c12" caseValue={hover.hoveredObject.cases.toLocaleString()} caseType={"Total Reported Cases"} />
@@ -246,7 +242,7 @@ export default class App extends React.Component {
           <div style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 100 }}>
             <NavigationControl captureScroll={true} showZoom={true} showCompass={false} />
           </div>
-          <StaticMap mapStyle={this.state.DarkMode ? "mapbox://styles/ugur222/ck962tunp224e1imwoghojsqd" : "mapbox://styles/ugur222/ck962tunp224e1imwoghojsqd"} mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
+          <StaticMap mapStyle={mapStyle} mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN} />
           <div style={{ position: 'absolute', right: 0 }}>
             <FullscreenControl container={document.querySelector('body')} />
           </div>
