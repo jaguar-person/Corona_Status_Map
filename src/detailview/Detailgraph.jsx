@@ -49,8 +49,7 @@ export default class Detailgraph extends Component {
     getYesterday = (array, index, dataType, location) => {
         let previousValue;
         let activeCases = location['confirmed'] - (location['deaths'] + location['recovered']);
-
-        cases = (dataType === "confirmed" ? activeCases : location[dataType])
+        cases = (dataType === "confirmed" ? activeCases : location[dataType]);
         if (dataType === "confirmed") {
             previousValue = array[index - 1] ? array[index - 1][dataType] - (array[index - 1]['recovered'] + array[index - 1]['deaths']) : 0;
         } else {
@@ -58,7 +57,7 @@ export default class Detailgraph extends Component {
         }
         rate = 10 * Math.abs((cases - previousValue) / ((cases + previousValue) / 2));
         dayValue = cases - previousValue;
-        console.log(cases);
+
     }
 
     componentDidMount() {
@@ -102,8 +101,12 @@ export default class Detailgraph extends Component {
                 } else {
                     data = location.data.stats.history;
                     data = data.map(function (province, index, array) {
-                        dataType = "confirmed";
+                        if (dataType === "Active") {
+                            dataType = 'confirmed';
+                        }
+                        dataType = dataType.charAt(0).toLowerCase() + dataType.slice(1);
                         this.getYesterday(array, index, dataType, province);
+                        console.log(dataType);
                         return {
                             Cases: cases,
                             rate: rate.toFixed(2),
