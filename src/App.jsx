@@ -70,7 +70,7 @@ export default class App extends React.Component {
     document.title = "NCOV19UPDATE";
 
     this.fetchData();
-    this.timer = setInterval(() => this.fetchData(), 5000);
+    this.timer = setInterval(() => this.fetchData(), 20000);
   }
 
   componentWillUnmount() {
@@ -86,7 +86,7 @@ export default class App extends React.Component {
 
   fetchData() {
     axios.all([
-      axios.get('https://corona.lmao.ninja/v2/countries'),
+      axios.get('https://corona.lmao.ninja/v2/countries?allowNull=false'),
       axios.get('https://api.smartable.ai/coronavirus/stats/CA', config),
       axios.get('https://api.smartable.ai/coronavirus/stats/US', config),
       axios.get('https://api.smartable.ai/coronavirus/stats/CN', config),
@@ -185,15 +185,15 @@ export default class App extends React.Component {
               {hover.layer.props.id === "Active" && (
                 <li className="cases">
                   <HoverPanel src="https://img.icons8.com/color/48/000000/treatment-plan.png"
-                    color="#f39c12" caseValue={hover.hoveredObject.cases.toLocaleString()} caseType={"Total Reported Cases"} />
+                    color="#F39C12" caseValue={hover.hoveredObject.cases.toLocaleString()} caseType={"Total Cases"} />
                   <HoverPanel src="https://img.icons8.com/color/48/000000/coronavirus.png"
-                    color="#f39c12" caseValue={hover.hoveredObject.active.toLocaleString()} caseType={"Active Cases"} />
+                    color="#F39C12" caseValue={hover.hoveredObject.active.toLocaleString()} caseType={"Active Cases"} />
                   <HoverPanel src="https://img.icons8.com/color/48/000000/health-book.png"
-                    color="#f39c12" caseValue={hover.hoveredObject.todayCases.toLocaleString()} caseType={"Reported Today"} />
+                    color="#F39C12" caseValue={hover.hoveredObject.todayCases.toLocaleString()} caseType={"Reported Today"} />
                   {hover.hoveredObject.updated && (
                     <div className="extra-info">
                       <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
-                        color="grey" caseValue={hover.hoveredObject.updated} caseType={"Last updated"} />
+                        color="#9E9E9E" caseValue={hover.hoveredObject.updated} caseType={"Last updated"} />
                     </div>
                   )}
                 </li>
@@ -201,15 +201,15 @@ export default class App extends React.Component {
               {hover.layer.props.id === "Deaths" && (
                 <li className="cases">
                   <HoverPanel src="https://img.icons8.com/color/48/000000/die-in-bed.png"
-                    color="#a50f15" caseValue={hover.hoveredObject.deaths.toLocaleString()} caseType={"Total Reported Deaths"} />
+                    color="#D18C8D" caseValue={hover.hoveredObject.deaths.toLocaleString()} caseType={"Total Deaths"} />
                   <HoverPanel src="https://img.icons8.com/color/48/000000/death.png"
-                    color="#a50f15" caseValue={hover.hoveredObject.todayDeaths.toLocaleString()} caseType={"Reported Today"} />
+                    color="#D18C8D" caseValue={hover.hoveredObject.todayDeaths.toLocaleString()} caseType={"Reported Today"} />
                   {hover.hoveredObject.updated && (
                     <div className="extra-info">
                       <HoverPanel src="https://img.icons8.com/color/48/000000/hospital-room--v2.png"
-                        color="#a50f15" caseValue={hover.hoveredObject.critical.toLocaleString()} caseType={"Critical Condition"} />
+                        color="#D18C8D" caseValue={hover.hoveredObject.critical.toLocaleString()} caseType={"Critical Condition"} />
                       <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
-                        color="grey" caseValue={hover.hoveredObject.updated} caseType={"Last updated"} />
+                        color="#9E9E9E" caseValue={hover.hoveredObject.updated} caseType={"Last updated"} />
                     </div>
                   )}
                 </li>
@@ -217,19 +217,19 @@ export default class App extends React.Component {
               {hover.layer.props.id === "Recovered" && (
                 <li className="cases">
                   <HoverPanel src="https://img.icons8.com/color/48/000000/recovery.png"
-                    color="#006d2c" caseValue={hover.hoveredObject.recovered.toLocaleString()} caseType={"Total Reported Recoveries"} />
+                    color="#84A78B" caseValue={hover.hoveredObject.recovered.toLocaleString()} caseType={"Total Recoveries"} />
                   {hover.hoveredObject.province && (
                     <HoverPanel src="https://img.icons8.com/color/48/000000/health-checkup.png"
-                      color="#006d2c" caseValue={hover.hoveredObject.todayRecovered.toLocaleString()} caseType={"Reported Today"} />
+                      color="#84A78B" caseValue={hover.hoveredObject.todayRecovered.toLocaleString()} caseType={"Reported Today"} />
                   )}
                   {hover.hoveredObject.updated && (
                     <div className="extra-info">
                       <HoverPanel src="https://img.icons8.com/color/48/000000/medical-thermometer.png"
-                        color="#006d2c" caseValue={hover.hoveredObject.tests.toLocaleString()} caseType={"Tested"} />
+                        color="#84A78B" caseValue={hover.hoveredObject.tests.toLocaleString()} caseType={"Tested"} />
                       <HoverPanel src="https://img.icons8.com/color/48/000000/crowd.png"
-                        color="#006d2c" caseValue={hover.hoveredObject.testsPerOneMillion.toLocaleString()} caseType={"Per 1M pop"} />
+                        color="#84A78B" caseValue={hover.hoveredObject.testsPerOneMillion.toLocaleString()} caseType={"Per 1M pop"} />
                       <HoverPanel src="https://img.icons8.com/color/48/000000/approve-and-update.png"
-                        color="grey" caseValue={hover.hoveredObject.updated} caseType={"Last updated"} />
+                        color="#9E9E9E" caseValue={hover.hoveredObject.updated} caseType={"Last updated"} />
                     </div>
                   )}
                 </li>

@@ -3,7 +3,7 @@
     box-shadow: 0 0 35px 0 rgba(73, 80, 87, 0.15);
     white-space: nowrap;
     border-radius: 10px;
-    position: absolute;
+    position: fixed;
     z-index: 1000;
     @media not all and (min-resolution: 0.001dpcm) {
         min-width: 18em;

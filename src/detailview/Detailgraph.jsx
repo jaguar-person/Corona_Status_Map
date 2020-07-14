@@ -117,10 +117,11 @@ export default class Detailgraph extends Component {
                     }, this);
 
                 }
-                data = data.filter(item => (item.Cases !== 0 && item.rate !== 0 && item.rate && item.dayValue > 0));
+                data = data.filter(item => (item.Cases !== 0 && item.rate !== 0 && item.rate && item.dayValue > 0 && item.date !== "2020-06-24T00:00:00Z" && item.date !== "2020-06-25T00:00:00Z"));
                 const amount = data.map((a) => a.dayValue);
                 maxDayValue = Math.max(...amount);
                 minDayValue = Math.min(...amount);
+                console.log(data);
 
                 this.setState({
                     data: data
